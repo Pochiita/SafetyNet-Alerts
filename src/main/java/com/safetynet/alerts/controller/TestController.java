@@ -1,10 +1,12 @@
 package com.safetynet.alerts.controller;
-import com.safetynet.alerts.model.FireStations;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.safetynet.alerts.model.JsonReader;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -17,11 +19,5 @@ public class TestController {
     public TestController(JsonReader jsonReader){
         this.jsonReader= jsonReader;
     }
-    @GetMapping(path="string")
-    public List getString(){
-         List test = jsonReader.getFireStations();
-         jsonReader.populateFireStations();
-        //return "hello";
-        return test;
-    }
+
 }

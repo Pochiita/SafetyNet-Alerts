@@ -1,12 +1,11 @@
 package com.safetynet.alerts.model;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
@@ -17,30 +16,18 @@ import java.io.File;
 @Service
 public class JsonReader {
 
-    private final Object obj;
-
+    private final ObjectMapper objectMapper;
     public JsonReader() throws IOException, ParseException {
-        this.obj = new JSONParser().parse(new FileReader("src/main/resources/data.json"));
+       this.objectMapper = new ObjectMapper();
+
     }
 
-    public Map getWholeJson() {
-        return (JSONObject) obj;
+    public JsonElts getWholeJson() throws IOException {
+        return objectMapper.readValue(new File("src/main/resources/data.json"),JsonElts.class);
     }
 
-    public JSONArray getFireStations (){
-        return (JSONArray) getWholeJson().get("firestations");
-    }
 
-    public FireStations populateFireStations (){
-        FireStations fireStations = new FireStations();
-        JSONArray fireStationsList = getFireStations();
-        fireStationsList.forEach(item->{
-            JSONObject singleStation = (JSONObject) item;
-            HashMap<String,String> stations = new HashMap<String,String>();
-            stations.put(singleStation.get("address").toString(),singleStation.get("station").toString());
-            System.out.println(stations);
-        });
-        return fireStations;
-    }
+
+
 
 }
