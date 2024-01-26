@@ -6,6 +6,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @RestController
@@ -24,15 +25,22 @@ public class CrudController {
         return jsonElts.getPersons();
     }
 
-    @DeleteMapping("/{id}")
-    public List deletePersons(@PathVariable int id){
+    @DeleteMapping("/{name}")
+    public List deletePersons(@PathVariable String name){
         List persons = jsonElts.getPersons();
-        System.out.println(persons.size());
-        if (id >=0 && id < persons.size()){
-            persons.remove(id);
-            System.out.println(persons.size());
-
+        String toCompare = name.toLowerCase();
+        int index = 0;
+        for (Object attributes:persons) {
+            LinkedHashMap<String,String> mapPerson = (LinkedHashMap<String, String>) attributes;
+            String firstName = mapPerson.get("firstName");
+            String lastName = mapPerson.get("lastName");
+            String fullName = firstName.concat(lastName).toLowerCase();
+            if (toCompare.equals(fullName)){
+                break;
+            }
+            index++;
         }
+        persons.remove(index);
         return persons;
     }
 }
