@@ -4,32 +4,32 @@ import java.util.List;
 
 public class JsonElts {
 
-    private List persons;
+    private List<Person> persons;
 
-    private List firestations;
+    private List<FireStation> firestations;
 
-    private List medicalrecords;
+    private List<MedicalRecord> medicalrecords;
 
-    public List getPersons() {
+    public List<Person> getPersons() {
         return persons;
     }
-    public List getFirestations() {
+    public List<FireStation> getFirestations() {
         return firestations;
     }
 
-    public List getMedicalrecords() {
+    public List<MedicalRecord> getMedicalrecords() {
         return medicalrecords;
     }
 
-    public void setPersons(List persons) {
+    public void setPersons(List<Person> persons) {
         this.persons = persons;
     }
 
-    public void setFirestations(List firestations) {
+    public void setFirestations(List<FireStation> firestations) {
         this.firestations = firestations;
     }
 
-    public void setMedicalrecords(List medicalrecords) {
+    public void setMedicalrecords(List<MedicalRecord> medicalrecords) {
         this.medicalrecords = medicalrecords;
     }
 }

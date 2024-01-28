@@ -1,13 +1,8 @@
 package com.safetynet.alerts.model;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +18,17 @@ public class JsonReader {
     }
 
     public JsonElts getWholeJson() throws IOException {
-        return objectMapper.readValue(new File("src/main/resources/data.json"),JsonElts.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonElts jsonElts = objectMapper.readValue(new File("src/main/resources/data.json"), JsonElts.class);
+
+        for (Person item: jsonElts.getPersons()
+             ) {
+        System.out.println(item);
+        }
+
+        return jsonElts;
     }
+
 
 
 
