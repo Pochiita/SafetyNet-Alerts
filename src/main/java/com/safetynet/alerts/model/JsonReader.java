@@ -20,12 +20,6 @@ public class JsonReader {
     public JsonElts getWholeJson() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonElts jsonElts = objectMapper.readValue(new File("src/main/resources/data.json"), JsonElts.class);
-
-        for (Person item: jsonElts.getPersons()
-             ) {
-        System.out.println(item);
-        }
-
         return jsonElts;
     }
 
