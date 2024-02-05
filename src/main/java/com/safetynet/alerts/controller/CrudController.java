@@ -4,6 +4,7 @@ import com.safetynet.alerts.model.JsonReader;
 import com.safetynet.alerts.model.Person;
 import jakarta.servlet.http.HttpServletRequest;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -15,20 +16,25 @@ import java.util.Map;
 @RestController
 @RequestMapping
 public class CrudController {
+@Autowired
+    private JsonReader jsonReader;
 
-    private JsonElts jsonElts;
-
-    public CrudController() throws IOException, ParseException {
+   /* public CrudController() throws IOException, ParseException {
         JsonReader jsonReader = new JsonReader();
-        this.jsonElts = jsonReader.getWholeJson();
+        this.jsonData = jsonReader.getJson();
+        System.out.println(jsonData.getPersons().size());
+    }*/
 
+    public JsonElts sharedJson() throws IOException {
+        return jsonReader.getJson();
     }
 
 
     @DeleteMapping("/person/{name}")
-    public void deletePersons(@PathVariable String name){
+    public void deletePersons(@PathVariable String name) throws IOException {
 
-        List<Person> people = jsonElts.getPersons();
+        List<Person> people = sharedJson().getPersons();
+        System.out.println(people.size());
         String toCompare = name.toLowerCase();
         int index = 0;
         boolean canDelete = false;
@@ -45,14 +51,16 @@ public class CrudController {
         }
         if (canDelete) {
             people.remove(index);
-            jsonElts.setPersons(people);
+            sharedJson().setPersons(people);
+            System.out.println(people.size());
+
         }else{
             return;
         }
     }
 
     @PutMapping("/person/{name}")
-    public void modifyPerson (@PathVariable String name,@RequestParam(value ="city") String cityName,@RequestParam(value="address") String address,@RequestParam(value="zip") String zip,@RequestParam(value="phone") String phone,@RequestParam(value="mail") String mail){
+    public void modifyPerson (@PathVariable String name,@RequestParam(value ="city") String cityName,@RequestParam(value="address") String address,@RequestParam(value="zip") String zip,@RequestParam(value="phone") String phone,@RequestParam(value="mail") String mail) throws IOException {
         Person selectedPerson = getPerson(name);
         if (selectedPerson != null) {
             selectedPerson.setCity(cityName);
@@ -62,8 +70,8 @@ public class CrudController {
             selectedPerson.setEmail(mail);
         }
     }
-    private Person getPerson(String name) {
-        List<Person> persons = jsonElts.getPersons();
+    private Person getPerson(String name) throws IOException {
+        List<Person> persons = sharedJson().getPersons();
         String toCompare = name.toLowerCase();
         int index = 0;
         Person selectedPerson = null;
@@ -80,8 +88,8 @@ public class CrudController {
     }
 
     @PostMapping("/person/")
-    public void modifyPerson (@RequestParam(value ="firstName") String firstName,@RequestParam(value ="lastName") String lastName,@RequestParam(value ="city") String cityName,@RequestParam(value="address") String address,@RequestParam(value="zip") String zip,@RequestParam(value="phone") String phone,@RequestParam(value="mail") String mail) {
-        List<Person> persons = jsonElts.getPersons();
+    public void modifyPerson (@RequestParam(value ="firstName") String firstName,@RequestParam(value ="lastName") String lastName,@RequestParam(value ="city") String cityName,@RequestParam(value="address") String address,@RequestParam(value="zip") String zip,@RequestParam(value="phone") String phone,@RequestParam(value="mail") String mail) throws IOException {
+        List<Person> persons = sharedJson().getPersons();
         Person newPerson = new Person();
         newPerson.setFirstName(firstName);
         newPerson.setLastName(lastName);

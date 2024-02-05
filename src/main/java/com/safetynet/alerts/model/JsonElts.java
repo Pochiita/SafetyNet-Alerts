@@ -1,7 +1,10 @@
 package com.safetynet.alerts.model;
 
-import java.util.List;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+@Service
 public class JsonElts {
 
     private List<Person> persons;
