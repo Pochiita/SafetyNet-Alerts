@@ -17,7 +17,7 @@ public class TestController {
 
     @Autowired
     private JsonReader jsonReader;
-    
+
     public JsonElts sharedJson() throws IOException {
         return jsonReader.getJson();
     }

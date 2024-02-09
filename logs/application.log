@@ -1,0 +1,125 @@
+2024-02-05 18:33:50.479 [main] INFO  c.safetynet.alerts.AlertsApplication - Starting AlertsApplication using Java 21 with PID 19988 (C:\Users\Pochi\Documents\Projet5\alerts\alerts\target\classes started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-05 18:33:50.486 [main] INFO  c.safetynet.alerts.AlertsApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-05 18:33:52.163 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-02-05 18:33:52.194 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-02-05 18:33:52.203 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-05 18:33:52.204 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.17]
+2024-02-05 18:33:52.277 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-05 18:33:52.279 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1715 ms
+2024-02-05 18:33:52.873 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-02-05 18:33:52.904 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2024-02-05 18:33:52.914 [main] INFO  c.safetynet.alerts.AlertsApplication - Started AlertsApplication in 3.225 seconds (process running for 3.801)
+2024-02-05 18:34:11.036 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-02-05 18:34:11.038 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-02-05 18:34:11.047 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 7 ms
+2024-02-05 18:34:11.134 [http-nio-8080-exec-2] ERROR com.safetynet.alerts.model.JsonElts - Pas trouvé
+2024-02-05 18:39:05.891 [main] INFO  c.safetynet.alerts.AlertsApplication - Starting AlertsApplication using Java 21 with PID 20104 (C:\Users\Pochi\Documents\Projet5\alerts\alerts\target\classes started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-05 18:39:05.902 [main] INFO  c.safetynet.alerts.AlertsApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-05 18:39:07.766 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-02-05 18:39:07.782 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-02-05 18:39:07.785 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-05 18:39:07.786 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.17]
+2024-02-05 18:39:07.866 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-05 18:39:07.867 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1859 ms
+2024-02-05 18:39:08.450 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-02-05 18:39:08.484 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2024-02-05 18:39:08.497 [main] INFO  c.safetynet.alerts.AlertsApplication - Started AlertsApplication in 3.468 seconds (process running for 4.112)
+2024-02-05 18:39:12.172 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-02-05 18:39:12.173 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-02-05 18:39:12.175 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-02-05 18:39:12.233 [http-nio-8080-exec-1] ERROR com.safetynet.alerts.model.JsonElts - Not found by value :johnboy
+2024-02-05 18:40:16.841 [main] INFO  c.safetynet.alerts.AlertsApplication - Starting AlertsApplication using Java 21 with PID 11056 (C:\Users\Pochi\Documents\Projet5\alerts\alerts\target\classes started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-05 18:40:16.847 [main] INFO  c.safetynet.alerts.AlertsApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-05 18:40:18.687 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-02-05 18:40:18.738 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-02-05 18:40:18.743 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-05 18:40:18.744 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.17]
+2024-02-05 18:40:18.835 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-05 18:40:18.838 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1878 ms
+2024-02-05 18:40:19.475 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-02-05 18:40:19.505 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2024-02-05 18:40:19.515 [main] INFO  c.safetynet.alerts.AlertsApplication - Started AlertsApplication in 3.604 seconds (process running for 4.207)
+2024-02-05 18:40:22.333 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-02-05 18:40:22.333 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-02-05 18:40:22.335 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2024-02-05 18:40:22.425 [http-nio-8080-exec-1] ERROR com.safetynet.alerts.model.JsonElts -  'Person' Not found by value :johnboy
+2024-02-05 18:54:48.731 [main] INFO  c.safetynet.alerts.AlertsApplication - Starting AlertsApplication using Java 21 with PID 11236 (C:\Users\Pochi\Documents\Projet5\alerts\alerts\target\classes started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-05 18:54:48.738 [main] INFO  c.safetynet.alerts.AlertsApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-05 18:54:50.414 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-02-05 18:54:50.443 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-02-05 18:54:50.447 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-05 18:54:50.447 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.17]
+2024-02-05 18:54:50.520 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-05 18:54:50.521 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1704 ms
+2024-02-05 18:54:51.125 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-02-05 18:54:51.159 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2024-02-05 18:54:51.176 [main] INFO  c.safetynet.alerts.AlertsApplication - Started AlertsApplication in 3.236 seconds (process running for 3.855)
+2024-02-05 18:54:51.309 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-02-05 18:54:51.311 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-02-05 18:54:51.313 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2024-02-05 18:54:51.375 [http-nio-8080-exec-1] ERROR com.safetynet.alerts.model.JsonElts -  'Person' couldn't be deleted - Not found by value :johnboy
+2024-02-05 18:54:55.650 [http-nio-8080-exec-2] INFO  com.safetynet.alerts.model.JsonElts -  'Person' correctly modified - Value:johnboyd
+2024-02-05 18:55:02.401 [http-nio-8080-exec-3] INFO  com.safetynet.alerts.model.JsonElts -  'Person' correctly created - 'Person' :testtest
+2024-02-05 18:55:06.922 [http-nio-8080-exec-4] INFO  com.safetynet.alerts.model.JsonElts -  'Person' correctly deleted - Value:johnboyd
+2024-02-05 18:56:35.146 [main] INFO  c.s.alerts.AlertsApplicationTests - Starting AlertsApplicationTests using Java 21 with PID 16700 (started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-05 18:56:35.148 [main] INFO  c.s.alerts.AlertsApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2024-02-05 18:56:37.026 [main] INFO  c.s.alerts.AlertsApplicationTests - Started AlertsApplicationTests in 2.373 seconds (process running for 3.989)
+2024-02-06 07:55:58.949 [main] INFO  c.safetynet.alerts.AlertsApplication - Starting AlertsApplication using Java 21 with PID 6412 (C:\Users\Pochi\Documents\Projet5\alerts\alerts\target\classes started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-06 07:55:58.954 [main] INFO  c.safetynet.alerts.AlertsApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-06 07:56:00.514 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-02-06 07:56:00.534 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-02-06 07:56:00.539 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-06 07:56:00.539 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.17]
+2024-02-06 07:56:00.618 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-06 07:56:00.619 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1595 ms
+2024-02-06 07:56:01.263 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-02-06 07:56:01.292 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2024-02-06 07:56:01.304 [main] INFO  c.safetynet.alerts.AlertsApplication - Started AlertsApplication in 3.235 seconds (process running for 4.019)
+2024-02-06 07:56:11.624 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-02-06 07:56:11.625 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-02-06 07:56:11.627 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2024-02-06 07:56:11.682 [http-nio-8080-exec-2] INFO  com.safetynet.alerts.model.JsonElts -  'Person' correctly deleted - Value:johnboyd
+2024-02-06 07:56:20.310 [http-nio-8080-exec-1] ERROR com.safetynet.alerts.model.JsonElts -  'Person' couldn't be deleted - Not found by value :johnboy
+2024-02-06 08:02:38.887 [main] INFO  c.safetynet.alerts.AlertsApplication - Starting AlertsApplication using Java 21 with PID 16968 (C:\Users\Pochi\Documents\Projet5\alerts\alerts\target\classes started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-06 08:02:38.893 [main] INFO  c.safetynet.alerts.AlertsApplication - No active profile set, falling back to 1 default profile: "default"
+2024-02-06 08:02:40.486 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-02-06 08:02:40.511 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-02-06 08:02:40.515 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-06 08:02:40.515 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.17]
+2024-02-06 08:02:40.591 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-06 08:02:40.593 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1625 ms
+2024-02-06 08:02:41.421 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-02-06 08:02:41.462 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2024-02-06 08:02:41.475 [main] INFO  c.safetynet.alerts.AlertsApplication - Started AlertsApplication in 3.406 seconds (process running for 4.006)
+2024-02-06 08:02:51.792 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-02-06 08:02:51.793 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-02-06 08:02:51.793 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2024-02-06 08:02:51.840 [http-nio-8080-exec-1] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required request parameter 'mail' for method parameter type String is not present]
+2024-02-06 08:18:34.623 [main] INFO  c.s.alerts.AlertsApplicationTests - Starting AlertsApplicationTests using Java 21 with PID 11004 (started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-06 08:18:34.625 [main] INFO  c.s.alerts.AlertsApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2024-02-06 08:18:36.496 [main] INFO  c.s.alerts.AlertsApplicationTests - Started AlertsApplicationTests in 2.471 seconds (process running for 3.811)
+2024-02-06 08:18:37.810 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.safetynet.alerts.JsonReadTests]: JsonReadTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-02-06 08:18:37.813 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.safetynet.alerts.AlertsApplication for test class com.safetynet.alerts.JsonReadTests
+2024-02-06 08:22:07.455 [main] INFO  c.s.alerts.AlertsApplicationTests - Starting AlertsApplicationTests using Java 21 with PID 7380 (started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-06 08:22:07.457 [main] INFO  c.s.alerts.AlertsApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2024-02-06 08:22:09.393 [main] INFO  c.s.alerts.AlertsApplicationTests - Started AlertsApplicationTests in 2.403 seconds (process running for 3.723)
+2024-02-06 08:22:10.603 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.safetynet.alerts.JsonReadTests]: JsonReadTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-02-06 08:22:10.606 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.safetynet.alerts.AlertsApplication for test class com.safetynet.alerts.JsonReadTests
+2024-02-06 08:23:32.755 [main] INFO  c.s.alerts.AlertsApplicationTests - Starting AlertsApplicationTests using Java 21 with PID 13696 (started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-06 08:23:32.758 [main] INFO  c.s.alerts.AlertsApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2024-02-06 08:23:34.491 [main] INFO  c.s.alerts.AlertsApplicationTests - Started AlertsApplicationTests in 2.2 seconds (process running for 3.433)
+2024-02-06 08:23:35.634 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.safetynet.alerts.JsonReadTests]: JsonReadTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-02-06 08:23:35.637 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.safetynet.alerts.AlertsApplication for test class com.safetynet.alerts.JsonReadTests
+2024-02-06 08:25:34.402 [main] INFO  c.s.alerts.AlertsApplicationTests - Starting AlertsApplicationTests using Java 21 with PID 7724 (started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-06 08:25:34.404 [main] INFO  c.s.alerts.AlertsApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2024-02-06 08:25:36.244 [main] INFO  c.s.alerts.AlertsApplicationTests - Started AlertsApplicationTests in 2.294 seconds (process running for 3.514)
+2024-02-06 08:26:18.291 [main] INFO  c.s.alerts.AlertsApplicationTests - Starting AlertsApplicationTests using Java 21 with PID 3840 (started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-06 08:26:18.294 [main] INFO  c.s.alerts.AlertsApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2024-02-06 08:26:20.512 [main] INFO  c.s.alerts.AlertsApplicationTests - Started AlertsApplicationTests in 2.766 seconds (process running for 4.331)
+2024-02-06 08:26:21.821 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.safetynet.alerts.JsonReadTests]: JsonReadTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-02-06 08:26:21.825 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.safetynet.alerts.AlertsApplication for test class com.safetynet.alerts.JsonReadTests
+2024-02-06 08:30:29.264 [main] INFO  c.s.alerts.AlertsApplicationTests - Starting AlertsApplicationTests using Java 21 with PID 21480 (started by Pochi in C:\Users\Pochi\Documents\Projet5\alerts\alerts)
+2024-02-06 08:30:29.269 [main] INFO  c.s.alerts.AlertsApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2024-02-06 08:30:32.092 [main] INFO  c.s.alerts.AlertsApplicationTests - Started AlertsApplicationTests in 3.668 seconds (process running for 6.356)
+2024-02-06 08:30:33.692 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.safetynet.alerts.JsonReadTests]: JsonReadTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-02-06 08:30:33.695 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.safetynet.alerts.AlertsApplication for test class com.safetynet.alerts.JsonReadTests
