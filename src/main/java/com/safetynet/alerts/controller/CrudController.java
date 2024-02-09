@@ -2,19 +2,14 @@ package com.safetynet.alerts.controller;
 import com.safetynet.alerts.model.JsonElts;
 import com.safetynet.alerts.model.JsonReader;
 import com.safetynet.alerts.model.Person;
-import jakarta.servlet.http.HttpServletRequest;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping
