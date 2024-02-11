@@ -24,7 +24,7 @@ public class TestController {
 
     @GetMapping("/person")
     public List<Person> modifyPerson () throws IOException {
-        System.out.println(sharedJson().getPersons().size());
+        System.out.println(sharedJson());
         return sharedJson().getPersons();
     }
 }

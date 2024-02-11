@@ -1,35 +1,36 @@
 package com.safetynet.alerts;
-import com.safetynet.alerts.controller.CrudController;
+import com.safetynet.alerts.controller.TestController;
+import com.safetynet.alerts.model.JsonElts;
 import com.safetynet.alerts.model.JsonReader;
-import org.junit.jupiter.api.BeforeEach;
+import com.safetynet.alerts.controller.CrudController;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-@ExtendWith(MockitoExtension.class)
-@WebMvcTest(CrudController.class)
-class AlertsApplicationTests {
+import static org.mockito.Mockito.when;
+import java.io.IOException;
+
+@WebMvcTest(controllers = TestController.class)
+@Import(TestController.class)
+public class AlertsApplicationTests {
+
+	@Autowired
+	@MockBean
+	private JsonReader jsonReader;
+
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Mock
-	private JsonReader jsonReader;
-
-	@InjectMocks
-	private CrudController crudController;
-
 	@Test
-	void contextLoads() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.delete("/person/{name}","johnboyd"))
+	public void testYourEndpoint() throws Exception {
+		JsonElts jsonElts = new JsonElts();
+		when(jsonReader.getJson()).thenReturn(jsonElts);
+		mockMvc.perform(MockMvcRequestBuilders.get("/test/person"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
-
 	}
-
 }
