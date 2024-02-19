@@ -1,11 +1,8 @@
 package com.safetynet.alerts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alerts.controller.TestController;
-import com.safetynet.alerts.model.JsonElts;
-import com.safetynet.alerts.model.JsonReader;
+import com.safetynet.alerts.model.*;
 import com.safetynet.alerts.controller.CrudController;
-import com.safetynet.alerts.model.ListSearcher;
-import com.safetynet.alerts.model.Person;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -77,7 +74,7 @@ public class AlertsApplicationTests {
 	}
 
  	@Test
-	public void canPutAPerrson()throws Exception{
+	public void canPutAPerson()throws Exception{
 		listSearcher = new ListSearcher();
 		JsonElts jsonElts = setJsonElts();
 		when(jsonReader.getJson()).thenReturn(jsonElts);
@@ -150,6 +147,63 @@ public class AlertsApplicationTests {
 		Person person = listSearcher.searchAPersonInAList("testtest",jsonElts.getPersons());
 		assertEquals(listSize,jsonElts.getPersons().size());
 		assertNull(person);
+	}
+
+	/**
+	 * Firestations
+	 */
+
+	@Test
+	public void createAFireStation()throws Exception{
+		listSearcher = new ListSearcher();
+		JsonElts jsonElts = setJsonElts();
+		int listSize = jsonElts.getFirestations().size();
+		when(jsonReader.getJson()).thenReturn(jsonElts);
+		mockMvc.perform(MockMvcRequestBuilders.post("/firestation/")
+						.param("address","test")
+						.param("station","test"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+		FireStation fireStation = listSearcher.searchAFireStationByAddress("test",jsonElts.getFirestations());
+
+		assertEquals(listSize+1,jsonElts.getFirestations().size());
+		assertNotNull(fireStation);
+	}
+
+	@Test
+	public void cantCreateAFireStation()throws Exception{
+		listSearcher = new ListSearcher();
+		JsonElts jsonElts = setJsonElts();
+		int listSize = jsonElts.getFirestations().size();
+		when(jsonReader.getJson()).thenReturn(jsonElts);
+		mockMvc.perform(MockMvcRequestBuilders.post("/firestation/")
+						.param("address","test"))
+				.andExpect(MockMvcResultMatchers.status().is4xxClientError());
+		FireStation fireStation = listSearcher.searchAFireStationByAddress("test",jsonElts.getFirestations());
+		assertEquals(listSize,jsonElts.getFirestations().size());
+		assertNull(fireStation);
+	}
+
+	@Test
+	public void canPutAFirestation()throws Exception{
+		listSearcher = new ListSearcher();
+		JsonElts jsonElts = setJsonElts();
+		when(jsonReader.getJson()).thenReturn(jsonElts);
+		mockMvc.perform(MockMvcRequestBuilders.put("/firestation/90873rdst")
+						.param("station","1"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+		FireStation fireStation = listSearcher.searchAFireStationByAddress("90873rdst",jsonElts.getFirestations());
+		assertEquals(fireStation.getStation(),"1");
+	}
+
+	@Test
+	public void InexistantPutFirestation()throws Exception{
+		listSearcher = new ListSearcher();
+		JsonElts jsonElts = setJsonElts();
+		FireStation fireStation = listSearcher.searchAFireStationByAddress("3rdst",jsonElts.getFirestations());
+		when(jsonReader.getJson()).thenReturn(jsonElts);
+		mockMvc.perform(MockMvcRequestBuilders.put("/firestation/3rdst"))
+				.andExpect(MockMvcResultMatchers.status().is4xxClientError());
+		assertNull(fireStation);
 	}
 
 

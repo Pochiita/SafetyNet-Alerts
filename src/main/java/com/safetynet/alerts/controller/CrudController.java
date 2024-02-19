@@ -1,8 +1,5 @@
 package com.safetynet.alerts.controller;
-import com.safetynet.alerts.model.JsonElts;
-import com.safetynet.alerts.model.JsonReader;
-import com.safetynet.alerts.model.ListSearcher;
-import com.safetynet.alerts.model.Person;
+import com.safetynet.alerts.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,9 +75,7 @@ public class CrudController {
             String msg = " 'Person' couldn't be modified - Not found by value :".concat(name);
             logger.info(msg);
             return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
-
         }
-
     }
 
 
@@ -106,9 +101,49 @@ public class CrudController {
             return new ResponseEntity<>("Not created", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Correctly created", HttpStatus.OK);
-
     }
 
+
+    /**
+     * FireStations
+     */
+
+    @PostMapping("/firestation/")
+    public ResponseEntity<String> createFirestation (@RequestParam(value ="address") String address,@RequestParam(value ="station") String station) throws IOException {
+        List<FireStation> fireStations = sharedJson().getFirestations();
+        int listSize = fireStations.size();
+        FireStation newFirestation = new FireStation();
+        newFirestation.setAddress(address);
+        newFirestation.setStation(station);
+        fireStations.add(newFirestation);
+        if (fireStations.size()>listSize){
+            String msg = " 'Firestation' correctly created - 'FireStation' :".concat(newFirestation.getStation()).concat(" - ").concat(newFirestation.getAddress());
+            logger.info(msg);
+        }else{
+            String msg = " 'Firestation' couldn't be created";
+            logger.info(msg);
+            return new ResponseEntity<>("Not created", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Correctly created", HttpStatus.OK);
+    }
+
+
+    @PutMapping("/firestation/{address}")
+    public ResponseEntity<String> modifyStation (@PathVariable String address,@RequestParam(value="station") String station) throws IOException {
+        List<FireStation> fireStations = sharedJson().getFirestations();
+        FireStation selectedFirestation = listSearcher.searchAFireStationByAddress(address,fireStations);
+        if (selectedFirestation != null) {
+            selectedFirestation.setStation(station);
+            String msg = " 'Firestation' correctly modified - New station number:".concat(selectedFirestation.getStation());
+            logger.info(msg);
+            return new ResponseEntity<>("Correctly modified", HttpStatus.OK);
+
+        }else{
+            String msg = " 'Firestation' couldn't be modified - Not found by value :".concat(address);
+            logger.info(msg);
+            return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
 

@@ -21,4 +21,20 @@ public class ListSearcher {
         }
         return selectedPerson;
     }
+
+    public FireStation searchAFireStationByAddress(String address,List<FireStation> list){
+        List<FireStation> firestations = list;
+        String toCompare = address.toLowerCase().replaceAll("\\s","");
+        int index = 0;
+        FireStation selectedFirestation = null;
+        for (FireStation fireStation:firestations) {
+            String currentAdress = fireStation.getAddress();
+            String fullName = currentAdress.toLowerCase().replaceAll("\\s","");
+            if (toCompare.equals(fullName)){
+                selectedFirestation = firestations.get(index);
+            }
+            index++;
+        }
+        return selectedFirestation;
+    }
 }
