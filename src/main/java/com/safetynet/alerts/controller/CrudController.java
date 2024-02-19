@@ -1,6 +1,7 @@
 package com.safetynet.alerts.controller;
 import com.safetynet.alerts.model.JsonElts;
 import com.safetynet.alerts.model.JsonReader;
+import com.safetynet.alerts.model.ListSearcher;
 import com.safetynet.alerts.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ public class CrudController {
 
     Logger logger = LoggerFactory.getLogger(JsonElts.class);
 
+    ListSearcher listSearcher = new ListSearcher();
 
     public JsonElts sharedJson() throws IOException {
         return jsonReader.getJson();
@@ -60,7 +62,8 @@ public class CrudController {
 
     @PutMapping("/person/{name}")
     public ResponseEntity<String> modifyPerson (@PathVariable String name,@RequestParam(value ="city") String cityName,@RequestParam(value="address") String address,@RequestParam(value="zip") String zip,@RequestParam(value="phone") String phone,@RequestParam(value="mail") String mail) throws IOException {
-        Person selectedPerson = getPerson(name);
+        List<Person> persons = sharedJson().getPersons();
+        Person selectedPerson = listSearcher.searchAPersonInAList(name,persons);
         if (selectedPerson != null) {
             selectedPerson.setCity(cityName);
             selectedPerson.setAddress(address);
@@ -69,34 +72,20 @@ public class CrudController {
             selectedPerson.setEmail(mail);
             String msg = " 'Person' correctly modified - Value:".concat(name);
             logger.info(msg);
-            return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Correctly modified", HttpStatus.OK);
 
         }else{
             String msg = " 'Person' couldn't be modified - Not found by value :".concat(name);
             logger.info(msg);
+            return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
+
         }
-        return new ResponseEntity<>("Correctly modified", HttpStatus.OK);
 
     }
-    private Person getPerson(String name) throws IOException {
-        List<Person> persons = sharedJson().getPersons();
-        String toCompare = name.toLowerCase();
-        int index = 0;
-        Person selectedPerson = null;
-        for (Person person:persons) {
-            String firstName = person.getFirstName();
-            String lastName = person.getLastName();
-            String fullName = firstName.concat(lastName).toLowerCase();
-            if (toCompare.equals(fullName)){
-                selectedPerson = persons.get(index);
-            }
-            index++;
-        }
-        return selectedPerson;
-    }
+
 
     @PostMapping("/person/")
-    public ResponseEntity<String> modifyPerson (@RequestParam(value ="firstName") String firstName,@RequestParam(value ="lastName") String lastName,@RequestParam(value ="city") String cityName,@RequestParam(value="address") String address,@RequestParam(value="zip") String zip,@RequestParam(value="phone") String phone,@RequestParam(value="mail") String mail) throws IOException {
+    public ResponseEntity<String> createPerson (@RequestParam(value ="firstName") String firstName,@RequestParam(value ="lastName") String lastName,@RequestParam(value ="city") String cityName,@RequestParam(value="address") String address,@RequestParam(value="zip") String zip,@RequestParam(value="phone") String phone,@RequestParam(value="mail") String mail) throws IOException {
         List<Person> persons = sharedJson().getPersons();
         int listSize = persons.size();
         Person newPerson = new Person();
