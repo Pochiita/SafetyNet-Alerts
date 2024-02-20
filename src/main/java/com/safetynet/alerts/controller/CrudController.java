@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping
@@ -143,6 +144,36 @@ public class CrudController {
             logger.info(msg);
             return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @DeleteMapping("/firestation")
+    public ResponseEntity<String> deleteFirestations(@RequestParam(value="queryby") String param, @RequestParam(value="option") String option) throws IOException {
+
+        List<FireStation> fireStations = sharedJson().getFirestations();
+        int index = 0;
+        boolean canDelete = false;
+        if (!Objects.equals(param, "address") && !Objects.equals(param, "station")){
+            return new ResponseEntity<>("Incorrect value 'queryby' must be either 'address' or 'station' ", HttpStatus.BAD_REQUEST);
+        }
+
+        if (Objects.equals(param, "station")){
+            if (!option.matches("\\d+")){
+                return new ResponseEntity<>("Incorrect value 'option' must be digits-only' ", HttpStatus.BAD_REQUEST);
+            }
+        }
+        List<FireStation> selectedFireStations = listSearcher.searchAFireStationByValue(param,option,fireStations);
+        if (selectedFireStations.size() >0){
+            for(FireStation firestation : selectedFireStations){
+                FireStation currentFirestation = firestation;
+                String logMsg = "Station with address : ".concat(currentFirestation.getAddress()).concat("and station number :").concat(currentFirestation.getStation()).concat(" Deleted");
+                fireStations.remove(firestation);
+                logger.info(logMsg);
+            }
+        }else{
+            return new ResponseEntity<>("No Firestation selected",HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("Correctly deleted",HttpStatus.OK);
     }
 
 

@@ -1,6 +1,8 @@
 package com.safetynet.alerts.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ListSearcher {
 
@@ -36,5 +38,34 @@ public class ListSearcher {
             index++;
         }
         return selectedFirestation;
+    }
+
+    public List<FireStation> searchAFireStationByValue(String option,String value,List<FireStation> list){
+        List<FireStation> firestations = list;
+        String baseValue = value;
+        String toCompare = "";
+        if(Objects.equals(option, "address")){
+            toCompare = baseValue.toLowerCase().replaceAll("\\s","");
+        }else if(Objects.equals(option, "station")){
+            toCompare = baseValue;
+        }
+        int index = 0;
+        List<FireStation> selectedFirestations = new ArrayList<FireStation>();
+        for (FireStation fireStation:firestations) {
+            if(Objects.equals(option, "address")){
+                String currentAdress = fireStation.getAddress().toLowerCase().replaceAll("\\s","");
+                if (toCompare.equals(currentAdress)){
+                    selectedFirestations.add(firestations.get(index));
+                }
+                index++;
+            }else if(Objects.equals(option, "station")){
+                String currentStation = fireStation.getStation();
+                if (toCompare.equals(currentStation)){
+                    selectedFirestations.add(firestations.get(index));
+                }
+                index++;
+            }
+        }
+        return selectedFirestations;
     }
 }
