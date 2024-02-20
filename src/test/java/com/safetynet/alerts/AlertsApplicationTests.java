@@ -278,4 +278,27 @@ public class AlertsApplicationTests {
 
 	}
 
+	/**
+	 * MecialRecords
+	 */
+
+	@Test
+	public void canDeleteMedicalRecord() throws Exception {
+		JsonElts jsonElts = setJsonElts();
+		int personsListSize = jsonElts.getMedicalrecords().size();
+		when(jsonReader.getJson()).thenReturn(jsonElts);
+		mockMvc.perform(MockMvcRequestBuilders.delete("/medicalrecords/johnboyd"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+		assertEquals(jsonElts.getMedicalrecords().size(),personsListSize-1);
+	}
+
+	@Test
+	public void cantDeleteMedicalRecord()throws Exception{
+		JsonElts jsonElts = setJsonElts();
+		int personsListSize = jsonElts.getMedicalrecords().size();
+		when(jsonReader.getJson()).thenReturn(jsonElts);
+		mockMvc.perform(MockMvcRequestBuilders.delete("/medicalrecords/johnbody"))
+				.andExpect(MockMvcResultMatchers.status().is4xxClientError());
+		assertEquals(jsonElts.getMedicalrecords().size(),personsListSize);
+	}
 }

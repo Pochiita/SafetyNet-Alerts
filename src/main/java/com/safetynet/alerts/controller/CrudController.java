@@ -177,7 +177,72 @@ public class CrudController {
     }
 
 
+    /**
+     * MedicalRecords
+     */
 
+    @PostMapping("/medicalrecords")
+    public ResponseEntity<String> createMedicalRecord (@RequestParam(value ="firstName") String firstName,@RequestParam(value ="lastName") String lastName,@RequestParam(value ="birthdate") String birthDate,@RequestParam(value="medication") List<String> medication,@RequestParam(value="allergies") List<String> allergies) throws IOException {
+        List<MedicalRecord> medicalRecordsList = sharedJson().getMedicalrecords();
+        int listSize = medicalRecordsList.size();
+        MedicalRecord newMedicalRecord = new MedicalRecord();
+        String[] checkingBirthDate = birthDate.split("/");
+        int index = 0;
+        for(String a : checkingBirthDate){
+            if (!a.matches("\\d+")) {
+                return new ResponseEntity<>("Birthdate must only contains digits",HttpStatus.BAD_REQUEST);
+            }
+            index++;
+        }
+        newMedicalRecord.setFirstName(firstName);
+        newMedicalRecord.setLastName(lastName);
+        newMedicalRecord.setBirthDate(birthDate);
+        newMedicalRecord.setMedications(medication);
+        newMedicalRecord.setAllergies(allergies);
+        medicalRecordsList.add(newMedicalRecord);
+        if (medicalRecordsList.size()>listSize){
+            String msg = " 'MedicalRecord' correctly created - 'MedicalRecord' :".concat(firstName).concat(lastName);
+            logger.info(msg);
+        }else{
+            String msg = " 'MedicalRecord' couldn't be created";
+            logger.info(msg);
+            return new ResponseEntity<>("Not created", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Correctly created", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/medicalrecords/{name}")
+    public ResponseEntity<String> deleteMedicalRecord(@PathVariable String name) throws IOException {
+
+        List<MedicalRecord> medicalRecordList = sharedJson().getMedicalrecords();
+        String toCompare = name.toLowerCase();
+        int index = 0;
+        boolean canDelete = false;
+        for (MedicalRecord medicalRecordSingle:medicalRecordList) {
+            String firstName = medicalRecordSingle.getFirstName();
+            String lastName = medicalRecordSingle.getLastName();
+            String fullName = firstName.concat(lastName).toLowerCase();
+            if (toCompare.equals(fullName)){
+                canDelete = true;
+                break;
+            }
+
+            index++;
+        }
+        if (canDelete) {
+            medicalRecordList.remove(index);
+            sharedJson().setMedicalrecords(medicalRecordList);
+            String msg = " 'MedicalRecord' correctly deleted - Value:".concat(name);
+            logger.info(msg);
+
+        }else{
+            String msg = " 'MedicalRecord' couldn't be deleted - Not found by value :".concat(name);
+            logger.error(msg);
+            return new ResponseEntity<>("Not deleted", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("Correctly deleted",HttpStatus.OK);
+    }
 
 
 }
