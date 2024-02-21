@@ -68,4 +68,21 @@ public class ListSearcher {
         }
         return selectedFirestations;
     }
+
+    public MedicalRecord searchAMecialRecordInAList (String name,List<MedicalRecord> list){
+        List<MedicalRecord> medicalRecordList = list;
+        String toCompare = name.toLowerCase();
+        int index = 0;
+        MedicalRecord selectedMedicalRecord = null;
+        for (MedicalRecord medicalRecord:medicalRecordList) {
+            String firstName = medicalRecord.getFirstName();
+            String lastName = medicalRecord.getLastName();
+            String fullName = firstName.concat(lastName).toLowerCase();
+            if (toCompare.equals(fullName)){
+                selectedMedicalRecord = medicalRecordList.get(index);
+            }
+            index++;
+        }
+        return selectedMedicalRecord;
+    }
 }

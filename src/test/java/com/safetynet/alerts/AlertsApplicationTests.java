@@ -8,18 +8,25 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @WebMvcTest(controllers = CrudController.class)
@@ -301,4 +308,98 @@ public class AlertsApplicationTests {
 				.andExpect(MockMvcResultMatchers.status().is4xxClientError());
 		assertEquals(jsonElts.getMedicalrecords().size(),personsListSize);
 	}
+
+	@Test
+	public void createAMedicalRecord()throws Exception{
+		listSearcher = new ListSearcher();
+		JsonElts jsonElts = setJsonElts();
+		int listSize = jsonElts.getMedicalrecords().size();
+		when(jsonReader.getJson()).thenReturn(jsonElts);
+		mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecords")
+						.param("firstName","test")
+						.param("lastName","test")
+						.param("birthdate","13/13/2023")
+						.param("allergies","test,test")
+						.param("medication","test,testr"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+		MedicalRecord medicalRecord = listSearcher.searchAMecialRecordInAList("testtest",jsonElts.getMedicalrecords());
+
+		assertEquals(listSize+1,jsonElts.getMedicalrecords().size());
+		assertNotNull(medicalRecord);
+	}
+
+	@Test
+	public void cantCreateAMedicalRecord()throws Exception{
+		listSearcher = new ListSearcher();
+		JsonElts jsonElts = setJsonElts();
+		int listSize = jsonElts.getMedicalrecords().size();
+		when(jsonReader.getJson()).thenReturn(jsonElts);
+		mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecord")
+						.param("firstName","test")
+						.param("lastName","test")
+						.param("allergies","test,test")
+						.param("medication","test,testr"))
+				.andExpect(MockMvcResultMatchers.status().is4xxClientError());
+		MedicalRecord medicalRecord = listSearcher.searchAMecialRecordInAList("testtest",jsonElts.getMedicalrecords());
+		assertEquals(listSize,jsonElts.getMedicalrecords().size());
+		assertNull(medicalRecord);
+	}
+
+
+		@Test
+		public void testCreateMedicalRecordInvalidBirthDate() throws Exception {
+			String firstName = "John";
+			String lastName = "Doe";
+			String birthDate = "01/abc/1990";
+			List<String> medication = Arrays.asList("Med1", "Med2");
+			List<String> allergies = Arrays.asList("Allergy1", "Allergy2");
+
+			mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecords")
+					.param("firstName", firstName)
+					.param("lastName", lastName)
+					.param("birthdate", birthDate)
+					.param("medication", medication.get(0), medication.get(1))
+					.param("allergies", allergies.get(0), allergies.get(1))
+			).andExpect(MockMvcResultMatchers.status().isBadRequest());
+		}
+
+
+	@Test
+	public void canPutAMedicalRecord()throws Exception{
+		listSearcher = new ListSearcher();
+		JsonElts jsonElts = setJsonElts();
+		List<String> medication = Arrays.asList("Med1", "Med2");
+		List<String> allergies = Arrays.asList("Allergy1", "Allergy2");
+		when(jsonReader.getJson()).thenReturn(jsonElts);
+		mockMvc.perform(MockMvcRequestBuilders.put("/medicalrecord/johnboyd")
+						.param("birthdate","13/13/2023")
+						.param("allergies",allergies.get(0),allergies.get(1))
+						.param("medication",medication.get(0),medication.get(1)))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+		MedicalRecord medicalRecord = listSearcher.searchAMecialRecordInAList("johnboyd",jsonElts.getMedicalrecords());
+		assertEquals(medicalRecord.getBirthdate(),"13/13/2023");
+		assertEquals(medicalRecord.getAllergies().get(0),"Allergy1");
+		assertEquals(medicalRecord.getMedications().get(0),"Med1");
+	}
+
+	@Test
+	public void InexistantPutMedicalRecord()throws Exception{
+		listSearcher = new ListSearcher();
+		JsonElts jsonElts = setJsonElts();
+		MedicalRecord medicalRecord = listSearcher.searchAMecialRecordInAList("johnbody",jsonElts.getMedicalrecords());
+		when(jsonReader.getJson()).thenReturn(jsonElts);
+		mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecord")
+						.param("birthdate","13/13/2023")
+						.param("allergies","test,test")
+						.param("medication","test,testr"))
+				.andExpect(MockMvcResultMatchers.status().is4xxClientError());
+		assertNull(medicalRecord);
+	}
+
+
+
+
+
+
+
 }

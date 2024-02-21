@@ -244,5 +244,24 @@ public class CrudController {
         return new ResponseEntity<>("Correctly deleted",HttpStatus.OK);
     }
 
+    @PutMapping("/medicalrecord/{name}")
+    public ResponseEntity<String> modifyMedicalRecord (@PathVariable String name,@RequestParam(value ="birthdate") String birthDate,@RequestParam(value="medication") List<String> medication,@RequestParam(value="allergies") List<String> allergies) throws IOException {
+        List<MedicalRecord> medicalRecordList = sharedJson().getMedicalrecords();
+        MedicalRecord selectedMedicalRecord = listSearcher.searchAMecialRecordInAList(name,medicalRecordList);
+        if (selectedMedicalRecord != null) {
+            selectedMedicalRecord.setBirthDate(birthDate);
+            selectedMedicalRecord.setMedications(medication);
+            selectedMedicalRecord.setAllergies(allergies);
+            String msg = " 'MedicalRecord' correctly modified - Value:".concat(name);
+            logger.info(msg);
+            return new ResponseEntity<>("Correctly modified", HttpStatus.OK);
+
+        }else{
+            String msg = " 'Person' couldn't be modified - Not found by value :".concat(name);
+            logger.info(msg);
+            return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }
