@@ -1,9 +1,8 @@
 package com.safetynet.alerts;
 
 import com.safetynet.alerts.model.JsonElts;
-import com.safetynet.alerts.model.JsonReader;
+import com.safetynet.alerts.services.JsonReader;
 import org.json.simple.parser.ParseException;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
