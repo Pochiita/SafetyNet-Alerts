@@ -28,6 +28,22 @@ public class ListSearcher {
         return selectedPerson;
     }
 
+    public List<Person> searchAPersonInAListByAddress (String address, List<Person> list){
+        List<Person> persons = list;
+        String toCompare = address.toLowerCase().replaceAll("\\s", "");
+        int index = 0;
+        List<Person> listSelectedPersons =new ArrayList<Person>();
+        for (Person person:persons) {
+            String addressPerson = person.getAddress().toLowerCase().replaceAll("\\s", "");
+
+            if (toCompare.equals(addressPerson)){
+                listSelectedPersons.add(persons.get(index));
+            }
+            index++;
+        }
+        return listSelectedPersons;
+    }
+
     public FireStation searchAFireStationByAddress(String address, List<FireStation> list){
         List<FireStation> firestations = list;
         String toCompare = address.toLowerCase().replaceAll("\\s","");
