@@ -249,7 +249,7 @@ public class CrudController {
     @PutMapping("/medicalrecord/{name}")
     public ResponseEntity<String> modifyMedicalRecord (@PathVariable String name,@RequestParam(value ="birthdate") String birthDate,@RequestParam(value="medication") List<String> medication,@RequestParam(value="allergies") List<String> allergies) throws IOException {
         List<MedicalRecord> medicalRecordList = sharedJson().getMedicalrecords();
-        MedicalRecord selectedMedicalRecord = listSearcher.searchAMecialRecordInAList(name,medicalRecordList);
+        MedicalRecord selectedMedicalRecord = listSearcher.searchAMedicalRecordInAList(name,medicalRecordList);
         if (selectedMedicalRecord != null) {
             selectedMedicalRecord.setBirthDate(birthDate);
             selectedMedicalRecord.setMedications(medication);

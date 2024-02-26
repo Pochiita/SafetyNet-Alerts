@@ -28,7 +28,7 @@ public class ListSearcher {
         return selectedPerson;
     }
 
-    public List<Person> searchAPersonInAListByAddress (String address, List<Person> list){
+    public List<Person> searchPersonsInAListByAddress(String address, List<Person> list){
         List<Person> persons = list;
         String toCompare = address.toLowerCase().replaceAll("\\s", "");
         int index = 0;
@@ -53,6 +53,21 @@ public class ListSearcher {
             String currentAdress = fireStation.getAddress();
             String fullName = currentAdress.toLowerCase().replaceAll("\\s","");
             if (toCompare.equals(fullName)){
+                selectedFirestation = firestations.get(index);
+            }
+            index++;
+        }
+        return selectedFirestation;
+    }
+
+    public FireStation searchAFireStationByStation(String stationNumber, List<FireStation> list){
+        List<FireStation> firestations = list;
+        String toCompare = stationNumber.replaceAll("\\s","");
+        int index = 0;
+        FireStation selectedFirestation = null;
+        for (FireStation fireStation:firestations) {
+            String currentStationNumber = fireStation.getStation().replaceAll("\\s","");
+            if (toCompare.equals(currentStationNumber)){
                 selectedFirestation = firestations.get(index);
             }
             index++;
@@ -89,7 +104,7 @@ public class ListSearcher {
         return selectedFirestations;
     }
 
-    public MedicalRecord searchAMecialRecordInAList (String name, List<MedicalRecord> list){
+    public MedicalRecord searchAMedicalRecordInAList(String name, List<MedicalRecord> list){
         List<MedicalRecord> medicalRecordList = list;
         String toCompare = name.toLowerCase();
         int index = 0;

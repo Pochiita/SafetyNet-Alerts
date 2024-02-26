@@ -318,7 +318,7 @@ public class AlertsApplicationTests {
 						.param("allergies","test,test")
 						.param("medication","test,testr"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
-		MedicalRecord medicalRecord = listSearcher.searchAMecialRecordInAList("testtest",jsonElts.getMedicalrecords());
+		MedicalRecord medicalRecord = listSearcher.searchAMedicalRecordInAList("testtest",jsonElts.getMedicalrecords());
 
 		assertEquals(listSize+1,jsonElts.getMedicalrecords().size());
 		assertNotNull(medicalRecord);
@@ -336,7 +336,7 @@ public class AlertsApplicationTests {
 						.param("allergies","test,test")
 						.param("medication","test,testr"))
 				.andExpect(MockMvcResultMatchers.status().is4xxClientError());
-		MedicalRecord medicalRecord = listSearcher.searchAMecialRecordInAList("testtest",jsonElts.getMedicalrecords());
+		MedicalRecord medicalRecord = listSearcher.searchAMedicalRecordInAList("testtest",jsonElts.getMedicalrecords());
 		assertEquals(listSize,jsonElts.getMedicalrecords().size());
 		assertNull(medicalRecord);
 	}
@@ -372,7 +372,7 @@ public class AlertsApplicationTests {
 						.param("allergies",allergies.get(0),allergies.get(1))
 						.param("medication",medication.get(0),medication.get(1)))
 				.andExpect(MockMvcResultMatchers.status().isOk());
-		MedicalRecord medicalRecord = listSearcher.searchAMecialRecordInAList("johnboyd",jsonElts.getMedicalrecords());
+		MedicalRecord medicalRecord = listSearcher.searchAMedicalRecordInAList("johnboyd",jsonElts.getMedicalrecords());
 		assertEquals(medicalRecord.getBirthdate(),"13/13/2023");
 		assertEquals(medicalRecord.getAllergies().get(0),"Allergy1");
 		assertEquals(medicalRecord.getMedications().get(0),"Med1");
@@ -382,7 +382,7 @@ public class AlertsApplicationTests {
 	public void InexistantPutMedicalRecord()throws Exception{
 		listSearcher = new ListSearcher();
 		JsonElts jsonElts = setJsonElts();
-		MedicalRecord medicalRecord = listSearcher.searchAMecialRecordInAList("johnbody",jsonElts.getMedicalrecords());
+		MedicalRecord medicalRecord = listSearcher.searchAMedicalRecordInAList("johnbody",jsonElts.getMedicalrecords());
 		when(jsonReader.getJson()).thenReturn(jsonElts);
 		mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecord")
 						.param("birthdate","13/13/2023")

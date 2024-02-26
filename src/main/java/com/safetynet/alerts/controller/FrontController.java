@@ -11,13 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -63,7 +60,7 @@ public class FrontController {
                     String firstName = b.getFirstName();
                     String lastName = b.getLastName();
                     String fullName = firstName.concat(lastName).toLowerCase();
-                    MedicalRecord currentMedical = listSearcher.searchAMecialRecordInAList(fullName, sharedJson().getMedicalrecords());
+                    MedicalRecord currentMedical = listSearcher.searchAMedicalRecordInAList(fullName, sharedJson().getMedicalrecords());
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
                     LocalDate dob = LocalDate.parse(currentMedical.getBirthdate(), formatter);
                     Period period = Period.between(dob, LocalDate.now());
@@ -99,7 +96,7 @@ public class FrontController {
 
         //Instanciate methods that allow to find all Person by address
         ListSearcher listSearcher = new ListSearcher();
-        List<Person> listResidents = listSearcher.searchAPersonInAListByAddress(address, sharedJson().getPersons());
+        List<Person> listResidents = listSearcher.searchPersonsInAListByAddress(address, sharedJson().getPersons());
 
         //Return empty json if we have no one at this address
         if (listResidents.isEmpty()){
@@ -117,7 +114,7 @@ public class FrontController {
             String firstName = c.getFirstName();
             String lastName = c.getLastName();
             String fullName = firstName.concat(lastName).toLowerCase();
-            MedicalRecord currentPersonMedicalRecord = listSearcher.searchAMecialRecordInAList(fullName, sharedJson().getMedicalrecords());
+            MedicalRecord currentPersonMedicalRecord = listSearcher.searchAMedicalRecordInAList(fullName, sharedJson().getMedicalrecords());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
             LocalDate dob = LocalDate.parse(currentPersonMedicalRecord.getBirthdate(), formatter);
             Period period = Period.between(dob, LocalDate.now());
@@ -146,7 +143,7 @@ public class FrontController {
                 String firstName = c.getFirstName();
                 String lastName = c.getLastName();
                 String fullName = firstName.concat(lastName).toLowerCase();
-                MedicalRecord currentPersonMedicalRecord = listSearcher.searchAMecialRecordInAList(fullName, sharedJson().getMedicalrecords());
+                MedicalRecord currentPersonMedicalRecord = listSearcher.searchAMedicalRecordInAList(fullName, sharedJson().getMedicalrecords());
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
                 LocalDate dob = LocalDate.parse(currentPersonMedicalRecord.getBirthdate(), formatter);
                 Period period = Period.between(dob, LocalDate.now());
@@ -165,4 +162,97 @@ public class FrontController {
 
         return returningData;
     }
-}
+
+    @GetMapping("/phoneAlert")
+    public List<String> phonedAlert(@RequestParam(value = "firestation") String station) throws IOException, ParseException {
+        List<String> phoneNumbers = new ArrayList<>();
+        ListSearcher listSearcher = new ListSearcher();
+
+        List<FireStation> firestationsConcerned = listSearcher.searchAFireStationByValue("station", station, sharedJson().getFirestations());
+        List<String> firestationsAddresses = new ArrayList<>();
+
+        for (FireStation a : firestationsConcerned) {
+            firestationsAddresses.add(a.getAddress());
+        }
+
+        List<Person> allPersons = sharedJson().getPersons();
+        for (Person a : allPersons) {
+            if (firestationsAddresses.contains(a.getAddress())) {
+                phoneNumbers.add(a.getPhone());
+            }
+        }
+
+        return phoneNumbers;
+    }
+
+    @GetMapping("/fire")
+    public List<HashMap> fireAlert(@RequestParam(value = "address") String address) throws IOException, ParseException {
+        List<HashMap> returningData = new ArrayList<>();
+        HashMap<String, List<HashMap>> peopleDisplayer = new HashMap<>();
+        List<HashMap> peopleList = new ArrayList<>();
+        HashMap<String,String> firestationDisplayer = new HashMap<>();
+
+        ListSearcher listSearcher = new ListSearcher();
+
+        List<Person> selectedPersons = listSearcher.searchPersonsInAListByAddress(address, sharedJson().getPersons());
+        FireStation selectedFirestation = listSearcher.searchAFireStationByAddress(address, sharedJson().getFirestations());
+        for (Person a : selectedPersons) {
+            //Setting variables that will be used to return the json and that represent a single person
+            HashMap<String, HashMap> individualPerson = new HashMap<>();
+            HashMap<String,String> individualTraits = new HashMap<>();
+            HashMap<String,List<String>> individualArray = new HashMap<>();
+            //Getting first and last name of someone to be able to get his MedicalRecord by concatenating both
+            String firstName = a.getFirstName();
+            String lastName = a.getLastName();
+            String fullName = firstName.concat(lastName).toLowerCase();
+            MedicalRecord currentMedicalRecord = listSearcher.searchAMedicalRecordInAList(fullName, sharedJson().getMedicalrecords());
+            //Here we get the age by checking the difference between Today and birthdate
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
+            LocalDate dob = LocalDate.parse(currentMedicalRecord.getBirthdate(), formatter);
+            Period period = Period.between(dob, LocalDate.now());
+            //We set every attributes needed for the json
+            individualTraits.put("lastName", currentMedicalRecord.getLastName());
+            individualTraits.put("phone", a.getPhone());
+            individualTraits.put("age", String.valueOf(period.getYears()));
+            individualArray.put("medication", currentMedicalRecord.getMedications());
+            individualArray.put("allergies", currentMedicalRecord.getAllergies());
+            individualPerson.put("medical",individualArray);
+            individualPerson.put("personnal",individualTraits);
+            //We had each individual to a list to be returned
+            peopleList.add(individualPerson);
+
+        }
+
+        firestationDisplayer.put("firesatationNbr",selectedFirestation.getStation());
+        peopleDisplayer.put("persons",peopleList);
+
+        returningData.add(peopleDisplayer);
+        returningData.add(firestationDisplayer);
+
+        return returningData;
+    }
+
+    @GetMapping("/flood/stations")
+    public /*List<HashMap>*/void floodAlert(@RequestParam(value = "stations") List<String> stations) throws IOException, ParseException {
+
+
+        List<HashMap> returningData = new ArrayList<>();
+        HashMap<String,List<HashMap>> addressDisplayer = new HashMap<>();
+
+
+        ListSearcher listSearcher = new ListSearcher();
+        List<Person> personList = sharedJson().getPersons();
+        List<FireStation> firestationList = new ArrayList<>();
+
+        for (String stationNbr : stations){
+            FireStation tmpFireStation = listSearcher.searchAFireStationByStation(stationNbr,sharedJson().getFirestations());
+            firestationList.add(tmpFireStation);
+        }
+
+        System.out.println(firestationList);
+
+
+
+    }
+
+    }
