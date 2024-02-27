@@ -233,26 +233,84 @@ public class FrontController {
     }
 
     @GetMapping("/flood/stations")
-    public /*List<HashMap>*/void floodAlert(@RequestParam(value = "stations") List<String> stations) throws IOException, ParseException {
+    public HashMap<String,List<HashMap>> floodAlert(@RequestParam(value = "stations") List<String> stations) throws IOException, ParseException {
 
 
         List<HashMap> returningData = new ArrayList<>();
         HashMap<String,List<HashMap>> addressDisplayer = new HashMap<>();
-
+        List<HashMap> allAddresses = new ArrayList<>();
 
         ListSearcher listSearcher = new ListSearcher();
-        List<Person> personList = sharedJson().getPersons();
         List<FireStation> firestationList = new ArrayList<>();
 
         for (String stationNbr : stations){
-            FireStation tmpFireStation = listSearcher.searchAFireStationByStation(stationNbr,sharedJson().getFirestations());
-            firestationList.add(tmpFireStation);
+            List<FireStation> tmpFireStation = listSearcher.searchAFireStationByValue("station",stationNbr,sharedJson().getFirestations());
+            for(FireStation a:tmpFireStation){
+                firestationList.add(a);
+            }
         }
 
-        System.out.println(firestationList);
+        for (FireStation fireStation:firestationList){
+            List<Person> selectedPersons = listSearcher.searchPersonsInAListByAddress(fireStation.getAddress(), sharedJson().getPersons());
+            HashMap<String,List<HashMap>> individualAddress = new HashMap<>();
+            List<HashMap> allPersons = new ArrayList<>();
+            for (Person a : selectedPersons){
+                HashMap<String,HashMap> individualPerson = new HashMap<>();
+                HashMap<String,String> individualTraits = new HashMap<>();
+                HashMap<String,List<String>> individualArray = new HashMap<>();
+                individualTraits.put("lastName",a.getLastName());
+                individualTraits.put("phone",a.getPhone());
+                //Concat name
+                String firstName = a.getFirstName();
+                String lastName = a.getLastName();
+                String fullName = firstName.concat(lastName).toLowerCase();
+                MedicalRecord currentMedicalRecord = listSearcher.searchAMedicalRecordInAList(fullName, sharedJson().getMedicalrecords());
+                //Here we get the age by checking the difference between Today and birthdate
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
+                LocalDate dob = LocalDate.parse(currentMedicalRecord.getBirthdate(), formatter);
+                Period period = Period.between(dob, LocalDate.now());
+                //Set Age
+                individualTraits.put("age", String.valueOf(period.getYears()));
 
+                individualArray.put("medications",currentMedicalRecord.getMedications());
+                individualArray.put("allergies",currentMedicalRecord.getAllergies());
+                individualPerson.put("personnal",individualTraits);
+                individualPerson.put("medical",individualArray);
+                allPersons.add(individualPerson);
 
+            }
+            individualAddress.put(fireStation.getAddress(),allPersons);
+            allAddresses.add(individualAddress);
+        }
+        addressDisplayer.put("addresses",allAddresses);
 
+        return addressDisplayer;
+
+    }
+
+    @GetMapping("/personInfo")
+    public void personInfo(@RequestParam(value = "firstName") String firstName,@RequestParam (value = "lastName") String lastName) throws IOException, ParseException {
+    /*
+        List<Person> allPersons = sharedJson().getPersons();
+
+        for
+
+        }*/
+    }
+    @GetMapping("/communityEmail")
+    public List<String> communityEmail(@RequestParam(value = "city") String city) throws IOException, ParseException {
+
+       List<String> allMails= new ArrayList<>();
+
+       ListSearcher listSearcher = new ListSearcher();
+
+       List<Person> personByCity = listSearcher.searchPersonsInAListByCity(city,sharedJson().getPersons());
+
+       for (Person a : personByCity){
+           allMails.add(a.getEmail());
+       }
+
+       return allMails;
     }
 
     }

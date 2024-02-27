@@ -44,6 +44,22 @@ public class ListSearcher {
         return listSelectedPersons;
     }
 
+    public List<Person> searchPersonsInAListByCity(String city, List<Person> list){
+        List<Person> persons = list;
+        String toCompare = city.toLowerCase().replaceAll("\\s", "");
+        int index = 0;
+        List<Person> listSelectedPersons =new ArrayList<Person>();
+        for (Person person:persons) {
+            String cityPerson = person.getCity().toLowerCase().replaceAll("\\s", "");
+
+            if (toCompare.equals(cityPerson)){
+                listSelectedPersons.add(persons.get(index));
+            }
+            index++;
+        }
+        return listSelectedPersons;
+    }
+
     public FireStation searchAFireStationByAddress(String address, List<FireStation> list){
         List<FireStation> firestations = list;
         String toCompare = address.toLowerCase().replaceAll("\\s","");
