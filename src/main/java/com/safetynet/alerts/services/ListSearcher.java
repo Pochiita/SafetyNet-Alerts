@@ -76,20 +76,6 @@ public class ListSearcher {
         return selectedFirestation;
     }
 
-    public FireStation searchAFireStationByStation(String stationNumber, List<FireStation> list){
-        List<FireStation> firestations = list;
-        String toCompare = stationNumber.replaceAll("\\s","");
-        int index = 0;
-        FireStation selectedFirestation = null;
-        for (FireStation fireStation:firestations) {
-            String currentStationNumber = fireStation.getStation().replaceAll("\\s","");
-            if (toCompare.equals(currentStationNumber)){
-                selectedFirestation = firestations.get(index);
-            }
-            index++;
-        }
-        return selectedFirestation;
-    }
 
     public List<FireStation> searchAFireStationByValue(String option,String value,List<FireStation> list){
         List<FireStation> firestations = list;

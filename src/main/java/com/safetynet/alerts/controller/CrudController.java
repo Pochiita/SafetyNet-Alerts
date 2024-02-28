@@ -2,12 +2,16 @@ package com.safetynet.alerts.controller;
 import com.safetynet.alerts.model.*;
 import com.safetynet.alerts.services.JsonReader;
 import com.safetynet.alerts.services.ListSearcher;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -26,10 +30,15 @@ public class CrudController {
         return jsonReader.getJson();
     }
 
+    public String exampleMethod() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String url = request.getRequestURL().toString();
+        return "The URL used to access this route is: " + url;
+    }
 
     @DeleteMapping("/person/{name}")
     public ResponseEntity<String> deletePersons(@PathVariable String name) throws IOException {
-
+        logger.info(exampleMethod());
         List<Person> people = sharedJson().getPersons();
         String toCompare = name.toLowerCase();
         int index = 0;
@@ -76,7 +85,7 @@ public class CrudController {
 
         }else{
             String msg = " 'Person' couldn't be modified - Not found by value :".concat(name);
-            logger.info(msg);
+            logger.error(msg);
             return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
         }
     }
@@ -100,7 +109,7 @@ public class CrudController {
             logger.info(msg);
         }else{
             String msg = " 'Person' couldn't be created";
-            logger.info(msg);
+            logger.error(msg);
             return new ResponseEntity<>("Not created", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Correctly created", HttpStatus.OK);
@@ -124,7 +133,7 @@ public class CrudController {
             logger.info(msg);
         }else{
             String msg = " 'Firestation' couldn't be created";
-            logger.info(msg);
+            logger.error(msg);
             return new ResponseEntity<>("Not created", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Correctly created", HttpStatus.OK);
@@ -143,7 +152,7 @@ public class CrudController {
 
         }else{
             String msg = " 'Firestation' couldn't be modified - Not found by value :".concat(address);
-            logger.info(msg);
+            logger.error(msg);
             return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
         }
     }
@@ -154,12 +163,15 @@ public class CrudController {
         List<FireStation> fireStations = sharedJson().getFirestations();
         int index = 0;
         boolean canDelete = false;
+        logger.debug("Checking 'queryby' url parameter value");
         if (!Objects.equals(param, "address") && !Objects.equals(param, "station")){
+            logger.error("Incorrect value 'queryby' must be either 'address' or 'station' ");
             return new ResponseEntity<>("Incorrect value 'queryby' must be either 'address' or 'station' ", HttpStatus.BAD_REQUEST);
         }
-
+        logger.debug("Checking that the 'station' url parameter contains only digits");
         if (Objects.equals(param, "station")){
             if (!option.matches("\\d+")){
+                logger.error("Incorrect value 'option' must be digits-only'");
                 return new ResponseEntity<>("Incorrect value 'option' must be digits-only' ", HttpStatus.BAD_REQUEST);
             }
         }
@@ -172,6 +184,8 @@ public class CrudController {
                 logger.info(logMsg);
             }
         }else{
+            logger.error("No firestation selected");
+
             return new ResponseEntity<>("No Firestation selected",HttpStatus.BAD_REQUEST);
         }
 
@@ -190,8 +204,10 @@ public class CrudController {
         MedicalRecord newMedicalRecord = new MedicalRecord();
         String[] checkingBirthDate = birthDate.split("/");
         int index = 0;
+        logger.debug("Checking that the 'birthdate' url parameter contains only digits");
         for(String a : checkingBirthDate){
             if (!a.matches("\\d+")) {
+                logger.error("'Birthdate' parameter contained digits");
                 return new ResponseEntity<>("Birthdate must only contains digits",HttpStatus.BAD_REQUEST);
             }
             index++;
@@ -207,7 +223,7 @@ public class CrudController {
             logger.info(msg);
         }else{
             String msg = " 'MedicalRecord' couldn't be created";
-            logger.info(msg);
+            logger.error(msg);
             return new ResponseEntity<>("Not created", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Correctly created", HttpStatus.OK);
@@ -260,7 +276,7 @@ public class CrudController {
 
         }else{
             String msg = " 'Person' couldn't be modified - Not found by value :".concat(name);
-            logger.info(msg);
+            logger.error(msg);
             return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
         }
     }

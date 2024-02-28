@@ -6,6 +6,8 @@ import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.services.JsonReader;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.services.ListSearcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,8 @@ public class FrontController {
 
     @Autowired
     private JsonReader jsonReader;
+
+    Logger logger = LoggerFactory.getLogger(JsonElts.class);
 
     public JsonElts sharedJson() throws IOException {
         return jsonReader.getJson();
@@ -196,6 +200,11 @@ public class FrontController {
 
         List<Person> selectedPersons = listSearcher.searchPersonsInAListByAddress(address, sharedJson().getPersons());
         FireStation selectedFirestation = listSearcher.searchAFireStationByAddress(address, sharedJson().getFirestations());
+
+        if (selectedFirestation == null){
+            return returningData;
+        }
+
         for (Person a : selectedPersons) {
             //Setting variables that will be used to return the json and that represent a single person
             HashMap<String, HashMap> individualPerson = new HashMap<>();
@@ -218,7 +227,7 @@ public class FrontController {
             individualArray.put("allergies", currentMedicalRecord.getAllergies());
             individualPerson.put("medical",individualArray);
             individualPerson.put("personnal",individualTraits);
-            //We had each individual to a list to be returned
+            //We add each individual to a list to be returned
             peopleList.add(individualPerson);
 
         }
@@ -236,7 +245,6 @@ public class FrontController {
     public HashMap<String,List<HashMap>> floodAlert(@RequestParam(value = "stations") List<String> stations) throws IOException, ParseException {
 
 
-        List<HashMap> returningData = new ArrayList<>();
         HashMap<String,List<HashMap>> addressDisplayer = new HashMap<>();
         List<HashMap> allAddresses = new ArrayList<>();
 
