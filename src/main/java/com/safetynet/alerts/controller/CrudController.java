@@ -30,15 +30,16 @@ public class CrudController {
         return jsonReader.getJson();
     }
 
-    public String exampleMethod() {
+    public String urlLogger() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String url = request.getRequestURL().toString();
-        return "The URL used to access this route is: " + url;
+        String ipAddress = request.getRemoteAddr();
+        return "The URL used to access this route is: " + url + " and the IP address is: " + ipAddress;
     }
 
     @DeleteMapping("/person/{name}")
     public ResponseEntity<String> deletePersons(@PathVariable String name) throws IOException {
-        logger.info(exampleMethod());
+        logger.info(urlLogger());
         List<Person> people = sharedJson().getPersons();
         String toCompare = name.toLowerCase();
         int index = 0;
@@ -71,6 +72,7 @@ public class CrudController {
 
     @PutMapping("/person/{name}")
     public ResponseEntity<String> modifyPerson (@PathVariable String name,@RequestParam(value ="city") String cityName,@RequestParam(value="address") String address,@RequestParam(value="zip") String zip,@RequestParam(value="phone") String phone,@RequestParam(value="mail") String mail) throws IOException {
+        logger.info(urlLogger());
         List<Person> persons = sharedJson().getPersons();
         Person selectedPerson = listSearcher.searchAPersonInAList(name,persons);
         if (selectedPerson != null) {
@@ -93,6 +95,7 @@ public class CrudController {
 
     @PostMapping("/person/")
     public ResponseEntity<String> createPerson (@RequestParam(value ="firstName") String firstName,@RequestParam(value ="lastName") String lastName,@RequestParam(value ="city") String cityName,@RequestParam(value="address") String address,@RequestParam(value="zip") String zip,@RequestParam(value="phone") String phone,@RequestParam(value="mail") String mail) throws IOException {
+        logger.info(urlLogger());
         List<Person> persons = sharedJson().getPersons();
         int listSize = persons.size();
         Person newPerson = new Person();
@@ -122,6 +125,7 @@ public class CrudController {
 
     @PostMapping("/firestation/")
     public ResponseEntity<String> createFirestation (@RequestParam(value ="address") String address,@RequestParam(value ="station") String station) throws IOException {
+        logger.info(urlLogger());
         List<FireStation> fireStations = sharedJson().getFirestations();
         int listSize = fireStations.size();
         FireStation newFirestation = new FireStation();
@@ -142,6 +146,7 @@ public class CrudController {
 
     @PutMapping("/firestation/{address}")
     public ResponseEntity<String> modifyStation (@PathVariable String address,@RequestParam(value="station") String station) throws IOException {
+        logger.info(urlLogger());
         List<FireStation> fireStations = sharedJson().getFirestations();
         FireStation selectedFirestation = listSearcher.searchAFireStationByAddress(address,fireStations);
         if (selectedFirestation != null) {
@@ -159,6 +164,7 @@ public class CrudController {
 
     @DeleteMapping("/firestation")
     public ResponseEntity<String> deleteFirestations(@RequestParam(value="queryby") String param, @RequestParam(value="option") String option) throws IOException {
+        logger.info(urlLogger());
 
         List<FireStation> fireStations = sharedJson().getFirestations();
         int index = 0;
@@ -199,6 +205,8 @@ public class CrudController {
 
     @PostMapping("/medicalrecords")
     public ResponseEntity<String> createMedicalRecord (@RequestParam(value ="firstName") String firstName,@RequestParam(value ="lastName") String lastName,@RequestParam(value ="birthdate") String birthDate,@RequestParam(value="medication") List<String> medication,@RequestParam(value="allergies") List<String> allergies) throws IOException {
+        logger.info(urlLogger());
+
         List<MedicalRecord> medicalRecordsList = sharedJson().getMedicalrecords();
         int listSize = medicalRecordsList.size();
         MedicalRecord newMedicalRecord = new MedicalRecord();
@@ -231,6 +239,7 @@ public class CrudController {
 
     @DeleteMapping("/medicalrecords/{name}")
     public ResponseEntity<String> deleteMedicalRecord(@PathVariable String name) throws IOException {
+        logger.info(urlLogger());
 
         List<MedicalRecord> medicalRecordList = sharedJson().getMedicalrecords();
         String toCompare = name.toLowerCase();
@@ -264,6 +273,8 @@ public class CrudController {
 
     @PutMapping("/medicalrecord/{name}")
     public ResponseEntity<String> modifyMedicalRecord (@PathVariable String name,@RequestParam(value ="birthdate") String birthDate,@RequestParam(value="medication") List<String> medication,@RequestParam(value="allergies") List<String> allergies) throws IOException {
+        logger.info(urlLogger());
+
         List<MedicalRecord> medicalRecordList = sharedJson().getMedicalrecords();
         MedicalRecord selectedMedicalRecord = listSearcher.searchAMedicalRecordInAList(name,medicalRecordList);
         if (selectedMedicalRecord != null) {
