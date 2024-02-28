@@ -6,10 +6,13 @@ import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.services.JsonReader;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.services.ListSearcher;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -33,9 +36,16 @@ public class FrontController {
         return jsonReader.getJson();
     }
 
+    public String urlLogger() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String url = request.getRequestURL().toString();
+        String ipAddress = request.getRemoteAddr();
+        return "The URL used to access this route is: " + url + " and the IP address is: " + ipAddress;
+    }
+
     @GetMapping("/firestation")
     public List<HashMap> PeopleConcernedByStation(@RequestParam(value = "stationNumber") String stationNumber) throws IOException, ParseException {
-
+        logger.info(urlLogger());
         List<HashMap> returningData = new ArrayList<>();
         HashMap<String, List<HashMap>> rowPersons = new HashMap<>();
         HashMap<String, Integer> personsCounting = new HashMap<>();
@@ -44,6 +54,7 @@ public class FrontController {
 
         List<FireStation> fireStationsByStation = listSearcher.searchAFireStationByValue("station", stationNumber, sharedJson().getFirestations());
         if (fireStationsByStation.isEmpty()) {
+            logger.error("No firestation found for the value 'station':'".concat(stationNumber).concat("'"));
             return returningData;
         }
         List<Person> allPersons = sharedJson().getPersons();
@@ -54,6 +65,7 @@ public class FrontController {
             String actualAddress = a.getAddress();
             for (Person b : allPersons) {
                 if (b.getAddress().equals(actualAddress)) {
+                    logger.debug("Setting all properties to return data");
                     HashMap<String, String> singlePerson = new HashMap<>();
                     singlePerson.put("firstName", b.getFirstName());
                     singlePerson.put("lastName", b.getLastName());
@@ -85,12 +97,13 @@ public class FrontController {
         personsCounting.put("minors", minorNbr);
         returningData.add(rowPersons);
         returningData.add(personsCounting);
+        logger.debug("Returned data :"+returningData);
         return returningData;
     }
 
     @GetMapping("/childAlert")
     public List<HashMap> childAlert(@RequestParam(value = "address") String address) throws IOException, ParseException {
-
+        logger.info(urlLogger());
         //Setup variables that displays the json correctly
         List<HashMap> returningData = new ArrayList<>();
         HashMap<String, List<HashMap>> minorsList = new HashMap<>();
@@ -104,6 +117,8 @@ public class FrontController {
 
         //Return empty json if we have no one at this address
         if (listResidents.isEmpty()){
+            logger.error("There is no residents for the address : "+address+" or the address doesn't exist");
+
             return returningData;
         }
 
@@ -134,6 +149,7 @@ public class FrontController {
 
         //If there is no minors in the return empty json
         if(allMinors.isEmpty()){
+            logger.error("There is not minor Person at this address");
             return returningData;
         }
 
@@ -163,12 +179,13 @@ public class FrontController {
         minorsList.put("minor",allMinors);
         returningData.add(minorsList);
         returningData.add(otherResidents);
-
+        logger.debug("Returned data :"+returningData);
         return returningData;
     }
 
     @GetMapping("/phoneAlert")
     public List<String> phonedAlert(@RequestParam(value = "firestation") String station) throws IOException, ParseException {
+        logger.info(urlLogger());
         List<String> phoneNumbers = new ArrayList<>();
         ListSearcher listSearcher = new ListSearcher();
 
@@ -182,15 +199,18 @@ public class FrontController {
         List<Person> allPersons = sharedJson().getPersons();
         for (Person a : allPersons) {
             if (firestationsAddresses.contains(a.getAddress())) {
+                logger.debug("Adding people's phone number who match the given address");
                 phoneNumbers.add(a.getPhone());
             }
         }
-
+        logger.debug("Returned data :"+phoneNumbers);
         return phoneNumbers;
     }
 
     @GetMapping("/fire")
     public List<HashMap> fireAlert(@RequestParam(value = "address") String address) throws IOException, ParseException {
+        logger.info(urlLogger());
+
         List<HashMap> returningData = new ArrayList<>();
         HashMap<String, List<HashMap>> peopleDisplayer = new HashMap<>();
         List<HashMap> peopleList = new ArrayList<>();
@@ -202,6 +222,7 @@ public class FrontController {
         FireStation selectedFirestation = listSearcher.searchAFireStationByAddress(address, sharedJson().getFirestations());
 
         if (selectedFirestation == null){
+            logger.error("No firestation match this address : "+address);
             return returningData;
         }
 
@@ -237,14 +258,14 @@ public class FrontController {
 
         returningData.add(peopleDisplayer);
         returningData.add(firestationDisplayer);
-
+        logger.debug("Returned data : "+returningData);
         return returningData;
     }
 
     @GetMapping("/flood/stations")
     public HashMap<String,List<HashMap>> floodAlert(@RequestParam(value = "stations") List<String> stations) throws IOException, ParseException {
 
-
+        logger.info(urlLogger());
         HashMap<String,List<HashMap>> addressDisplayer = new HashMap<>();
         List<HashMap> allAddresses = new ArrayList<>();
 
@@ -291,7 +312,7 @@ public class FrontController {
             allAddresses.add(individualAddress);
         }
         addressDisplayer.put("addresses",allAddresses);
-
+        logger.debug("Returned data"+addressDisplayer);
         return addressDisplayer;
 
     }
@@ -307,7 +328,7 @@ public class FrontController {
     }
     @GetMapping("/communityEmail")
     public List<String> communityEmail(@RequestParam(value = "city") String city) throws IOException, ParseException {
-
+    logger.info(urlLogger());
        List<String> allMails= new ArrayList<>();
 
        ListSearcher listSearcher = new ListSearcher();
@@ -317,7 +338,7 @@ public class FrontController {
        for (Person a : personByCity){
            allMails.add(a.getEmail());
        }
-
+        logger.debug("Returned data "+allMails);
        return allMails;
     }
 
