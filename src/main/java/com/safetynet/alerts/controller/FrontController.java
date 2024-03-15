@@ -219,7 +219,7 @@ public class FrontController {
     }
 
     @GetMapping("/flood/stations")
-    public HashMap<String,List<HashMap>> floodAlert(@RequestParam(value = "stations") List<String> stations) throws IOException, ParseException {
+    public FloodAlertCountDTO floodAlert(@RequestParam(value = "stations") List<String> stations) throws IOException, ParseException {
 
         logger.info(urlLogger());
         HashMap<String,List<HashMap>> addressDisplayer = new HashMap<>();
@@ -235,16 +235,14 @@ public class FrontController {
             }
         }
 
+        List<FloodAlertHousesDTO> listOfHouses = new ArrayList<>();
+        List <FloodAlertPersonDTO> listOfPersons = new ArrayList<>();
+
         for (FireStation fireStation:firestationList){
             List<Person> selectedPersons = listSearcher.searchPersonsInAListByAddress(fireStation.getAddress(), sharedJson().getPersons());
-            HashMap<String,List<HashMap>> individualAddress = new HashMap<>();
-            List<HashMap> allPersons = new ArrayList<>();
+
             for (Person a : selectedPersons){
-                HashMap<String,HashMap> individualPerson = new HashMap<>();
-                HashMap<String,String> individualTraits = new HashMap<>();
-                HashMap<String,List<String>> individualArray = new HashMap<>();
-                individualTraits.put("lastName",a.getLastName());
-                individualTraits.put("phone",a.getPhone());
+
                 //Concat name
                 String firstName = a.getFirstName();
                 String lastName = a.getLastName();
@@ -254,22 +252,21 @@ public class FrontController {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
                 LocalDate dob = LocalDate.parse(currentMedicalRecord.getBirthdate(), formatter);
                 Period period = Period.between(dob, LocalDate.now());
-                //Set Age
-                individualTraits.put("age", String.valueOf(period.getYears()));
 
-                individualArray.put("medications",currentMedicalRecord.getMedications());
-                individualArray.put("allergies",currentMedicalRecord.getAllergies());
-                individualPerson.put("personnal",individualTraits);
-                individualPerson.put("medical",individualArray);
-                allPersons.add(individualPerson);
+                List<List<String>> medicationAllergies = new ArrayList<>();
+                medicationAllergies.add(currentMedicalRecord.getMedications());
+                medicationAllergies.add(currentMedicalRecord.getAllergies());
+                FloodAlertPersonDTO individualPerson = new FloodAlertPersonDTO(a.getLastName(),a.getPhone(),period.getYears(),medicationAllergies);
+                listOfPersons.add(individualPerson);
 
             }
-            individualAddress.put(fireStation.getAddress(),allPersons);
-            allAddresses.add(individualAddress);
+            FloodAlertHousesDTO singleHouse = new FloodAlertHousesDTO(fireStation.getAddress(),listOfPersons);
+            listOfHouses.add(singleHouse);
         }
         addressDisplayer.put("addresses",allAddresses);
+        FloodAlertCountDTO returnedData = new FloodAlertCountDTO(listOfHouses);
         logger.debug("Returned data"+addressDisplayer);
-        return addressDisplayer;
+        return returnedData;
 
     }
 
