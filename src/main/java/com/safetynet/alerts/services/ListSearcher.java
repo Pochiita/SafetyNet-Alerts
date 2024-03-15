@@ -65,10 +65,9 @@ public class ListSearcher {
         List<Person> persons = list;
         String toCompare = name.toLowerCase().replaceAll("\\s", "");
         int index = 0;
-        List<Person> listSelectedPersons =new ArrayList<Person>();
+        List<Person> listSelectedPersons =new ArrayList<>();
         for (Person person:persons) {
-            String cityPerson = person.getCity().toLowerCase().replaceAll("\\s", "");
-
+            String cityPerson = person.getFirstName().toLowerCase().replaceAll("\\s", "")+person.getLastName().toLowerCase().replaceAll("\\s", "");
             if (toCompare.equals(cityPerson)){
                 listSelectedPersons.add(persons.get(index));
             }

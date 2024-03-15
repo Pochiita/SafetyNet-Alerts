@@ -270,18 +270,33 @@ public class FrontController {
 
     }
 
-    @GetMapping("/personInfo")
-    public void personInfo(@RequestParam(value = "firstName") String firstName,@RequestParam (value = "lastName") String lastName) throws IOException, ParseException {
+    @GetMapping("/personinfo")
+    public PersonInfoCountDTO personInfo(@RequestParam(value = "firstName") String firstName, @RequestParam (value = "lastName") String lastName) throws IOException, ParseException {
+        logger.info(urlLogger());
 
         List<Person> allPersons = sharedJson().getPersons();
-        String lastNameParam = lastName;
         ListSearcher listSearcher = new ListSearcher();
-
-        List<Person> selectedPersons = listSearcher.searchPersonsInAListByLastName(lastNameParam,allPersons);
-
+        List<Person> selectedPersons = listSearcher.searchPersonsInAListByName(firstName.toLowerCase()+lastName.toLowerCase(),allPersons);
+        List<PersonInfoDTO> concernedPersons = new ArrayList<>();
         for(Person a : selectedPersons){
 
+            String firstNameVar = a.getFirstName();
+            String lastNameVar = a.getLastName();
+            String fullName = firstNameVar.concat(lastNameVar).toLowerCase();
+            MedicalRecord currentMedicalRecord = listSearcher.searchAMedicalRecordInAList(fullName, sharedJson().getMedicalrecords());
+            //Here we get the age by checking the difference between Today and birthdate
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
+            LocalDate dob = LocalDate.parse(currentMedicalRecord.getBirthdate(), formatter);
+            Period period = Period.between(dob, LocalDate.now());
+            List<List<String>> medicationAllergies = new ArrayList<>();
+            medicationAllergies.add(currentMedicalRecord.getAllergies());
+            medicationAllergies.add(currentMedicalRecord.getMedications());
+            concernedPersons.add(new PersonInfoDTO(a.getLastName(),period.getYears(),a.getEmail(),medicationAllergies));
         }
+
+        PersonInfoCountDTO returnedData = new PersonInfoCountDTO(concernedPersons);
+        logger.debug("Returned data "+returnedData);
+        return returnedData;
     }
 
     @GetMapping("/communityEmail")
