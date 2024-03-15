@@ -67,12 +67,16 @@ public class FontControllerTests {
     @Test
     public void testPeopleConcernedByInexistantStation() throws Exception {
         String inexistantFireStation = "999999";
-        List<HashMap> returningData = new ArrayList<>();
+        String json = "{\n" +
+                "\t\"personsStation\": [],\n" +
+                "\t\"totalAdultsNumber\": -1,\n" +
+                "\t\"totalChildrenNumber\": -1\n" +
+                "}";
         mockMvc.perform(MockMvcRequestBuilders.get("/firestation")
                         .param("stationNumber", inexistantFireStation)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(returningData.toString()));
+                .andExpect(MockMvcResultMatchers.content().json(json));
 
     }
 
@@ -87,25 +91,31 @@ public class FontControllerTests {
     @Test
     public void testPeopleConcernedByInexistantAddress() throws Exception {
         String inexistantAddress = "marmande";
-        List<HashMap> returningData = new ArrayList<>();
+        String json = "{\n" +
+                "\t\"minorsList\": [],\n" +
+                "\t\"adultsInSameHouse\": []\n" +
+                "}";
         mockMvc.perform(MockMvcRequestBuilders.get("/childAlert")
                         .param("address", inexistantAddress)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(returningData.toString()));
+                .andExpect(MockMvcResultMatchers.content().json(json));
 
     }
 
     @Test
     public void testPeopleConcernedByInexistantMinors() throws Exception {
         String inexistantChild = "644 Gershwin Cir";
-        List<HashMap> returningData = new ArrayList<>();
+        String json = "{\n" +
+                "\t\"minorsList\": [],\n" +
+                "\t\"adultsInSameHouse\": []\n" +
+                "}";
 
         mockMvc.perform(MockMvcRequestBuilders.get("/childAlert")
                         .param("address", inexistantChild)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(returningData.toString()));
+                .andExpect(MockMvcResultMatchers.content().json(json));
 
     }
 
@@ -120,11 +130,14 @@ public class FontControllerTests {
     @Test
     public void testPhoneAlertInexistantFirestation()throws Exception{
         List<HashMap> returningData = new ArrayList<>();
+        String json = "{\n" +
+                "\t\"phoneNumber\": []\n" +
+                "}";
         mockMvc.perform(MockMvcRequestBuilders.get("/phoneAlert")
                         .param("firestation", "789789798")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(returningData.toString()));
+                .andExpect(MockMvcResultMatchers.content().json(json));
 
     }
 
@@ -162,11 +175,16 @@ public class FontControllerTests {
     @Test
     public void testFireAlertInexistantAddress()throws Exception {
         List<HashMap> returningData = new ArrayList<>();
+
+        String json = "{\n" +
+                "\t\"citizens\": [],\n" +
+                "\t\"nbrOfFireStation\": \"-1\"\n" +
+                "}";
         mockMvc.perform(MockMvcRequestBuilders.get("/fire")
                         .param("address", "abcdef")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(returningData.toString()));
+                .andExpect(MockMvcResultMatchers.content().json(json));
 
     }
 
@@ -181,11 +199,12 @@ public class FontControllerTests {
     @Test
     public void testCommunityEmailInexistantCity()throws Exception {
         List<String> returningData = new ArrayList<>();
+        String json = "{\"mails\":[]}";
         mockMvc.perform(MockMvcRequestBuilders.get("/communityEmail")
                         .param("city", "abcdef")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(returningData.toString()));
+                .andExpect(MockMvcResultMatchers.content().json(json));
 
     }
 
