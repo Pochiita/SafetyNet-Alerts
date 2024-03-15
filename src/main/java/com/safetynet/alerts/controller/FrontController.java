@@ -300,19 +300,20 @@ public class FrontController {
     }
 
     @GetMapping("/communityEmail")
-    public List<String> communityEmail(@RequestParam(value = "city") String city) throws IOException, ParseException {
+    public CommunityMailDTO communityEmail(@RequestParam(value = "city") String city) throws IOException, ParseException {
     logger.info(urlLogger());
        List<String> allMails= new ArrayList<>();
 
        ListSearcher listSearcher = new ListSearcher();
 
        List<Person> personByCity = listSearcher.searchPersonsInAListByCity(city,sharedJson().getPersons());
-
+        System.out.println(personByCity.size());
        for (Person a : personByCity){
            allMails.add(a.getEmail());
        }
+       System.out.println(allMails);
         logger.debug("Returned data "+allMails);
-       return allMails;
+       return new CommunityMailDTO(allMails);
     }
 
     }
