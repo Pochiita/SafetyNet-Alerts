@@ -1,9 +1,6 @@
 package com.safetynet.alerts.controller;
 
-import com.safetynet.alerts.dto.ChildAlertCountDTO;
-import com.safetynet.alerts.dto.ChildAlertDTO;
-import com.safetynet.alerts.dto.FireStationCountDTO;
-import com.safetynet.alerts.dto.FireStationDTO;
+import com.safetynet.alerts.dto.*;
 import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.model.JsonElts;
 import com.safetynet.alerts.model.MedicalRecord;
@@ -55,7 +52,7 @@ public class FrontController {
         List<FireStation> fireStationsByStation = listSearcher.searchAFireStationByValue("station", stationNumber, sharedJson().getFirestations());
         if (fireStationsByStation.isEmpty()) {
             logger.error("No firestation found for the value 'station':'".concat(stationNumber).concat("'"));
-            return new FireStationCountDTO(new ArrayList<>(),0,0);
+            return new FireStationCountDTO(new ArrayList<>(),-1,-1);
         }
         List<Person> allPersons = sharedJson().getPersons();
         int adultNbr = 0;
@@ -94,14 +91,6 @@ public class FrontController {
     @GetMapping("/childAlert")
     public ChildAlertCountDTO childAlert(@RequestParam(value = "address") String address) throws IOException, ParseException {
         logger.info(urlLogger());
-        //Setup variables that displays the json correctly
-        List<HashMap> returningData = new ArrayList<>();
-        //HashMap<String, List<HashMap>> minorsList = new HashMap<>();
-        HashMap<String, List<HashMap>> otherResidents = new HashMap<>();
-        List<HashMap> allMinors = new ArrayList<>();
-        List<HashMap> allAdults = new ArrayList<>();
-
-
         //Instanciate methods that allow to find all Person by address
         ListSearcher listSearcher = new ListSearcher();
         List<Person> listResidents = listSearcher.searchPersonsInAListByAddress(address, sharedJson().getPersons());
@@ -164,16 +153,14 @@ public class FrontController {
         }
 
 
-        logger.debug("Returned data :"+returningData);
+        logger.debug("Returned data :"+ new ChildAlertCountDTO(minorsList,adultList));
         return new ChildAlertCountDTO(minorsList,adultList);
     }
 
     @GetMapping("/phoneAlert")
-    public List<String> phonedAlert(@RequestParam(value = "firestation") String station) throws IOException, ParseException {
+    public PhoneAlertDTO phonedAlert(@RequestParam(value = "firestation") String station) throws IOException, ParseException {
         logger.info(urlLogger());
-        List<String> phoneNumbers = new ArrayList<>();
         ListSearcher listSearcher = new ListSearcher();
-
         List<FireStation> firestationsConcerned = listSearcher.searchAFireStationByValue("station", station, sharedJson().getFirestations());
         List<String> firestationsAddresses = new ArrayList<>();
 
@@ -181,26 +168,21 @@ public class FrontController {
             firestationsAddresses.add(a.getAddress());
         }
 
+        List<String> phonesList = new ArrayList<>();
         List<Person> allPersons = sharedJson().getPersons();
         for (Person a : allPersons) {
             if (firestationsAddresses.contains(a.getAddress())) {
                 logger.debug("Adding people's phone number who match the given address");
-                phoneNumbers.add(a.getPhone());
+                phonesList.add(a.getPhone());
             }
         }
-        logger.debug("Returned data :"+phoneNumbers);
-        return phoneNumbers;
+        logger.debug("Returned data :"+new PhoneAlertDTO(phonesList));
+        return new PhoneAlertDTO(phonesList);
     }
 
     @GetMapping("/fire")
-    public List<HashMap> fireAlert(@RequestParam(value = "address") String address) throws IOException, ParseException {
+    public FireAlertCountDTO fireAlert(@RequestParam(value = "address") String address) throws IOException, ParseException {
         logger.info(urlLogger());
-
-        List<HashMap> returningData = new ArrayList<>();
-        HashMap<String, List<HashMap>> peopleDisplayer = new HashMap<>();
-        List<HashMap> peopleList = new ArrayList<>();
-        HashMap<String,String> firestationDisplayer = new HashMap<>();
-
         ListSearcher listSearcher = new ListSearcher();
 
         List<Person> selectedPersons = listSearcher.searchPersonsInAListByAddress(address, sharedJson().getPersons());
@@ -208,14 +190,11 @@ public class FrontController {
 
         if (selectedFirestation == null){
             logger.error("No firestation match this address : "+address);
-            return returningData;
+            return new FireAlertCountDTO(new ArrayList<>(),"-1");
         }
-
+        List<FireAlertDTO> listOfCitizens = new ArrayList<>();
         for (Person a : selectedPersons) {
-            //Setting variables that will be used to return the json and that represent a single person
-            HashMap<String, HashMap> individualPerson = new HashMap<>();
-            HashMap<String,String> individualTraits = new HashMap<>();
-            HashMap<String,List<String>> individualArray = new HashMap<>();
+
             //Getting first and last name of someone to be able to get his MedicalRecord by concatenating both
             String firstName = a.getFirstName();
             String lastName = a.getLastName();
@@ -225,26 +204,18 @@ public class FrontController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
             LocalDate dob = LocalDate.parse(currentMedicalRecord.getBirthdate(), formatter);
             Period period = Period.between(dob, LocalDate.now());
-            //We set every attributes needed for the json
-            individualTraits.put("lastName", currentMedicalRecord.getLastName());
-            individualTraits.put("phone", a.getPhone());
-            individualTraits.put("age", String.valueOf(period.getYears()));
-            individualArray.put("medication", currentMedicalRecord.getMedications());
-            individualArray.put("allergies", currentMedicalRecord.getAllergies());
-            individualPerson.put("medical",individualArray);
-            individualPerson.put("personnal",individualTraits);
-            //We add each individual to a list to be returned
-            peopleList.add(individualPerson);
 
+            List<List<String>> medicationsAllergies = new ArrayList<>();
+            medicationsAllergies.add(currentMedicalRecord.getAllergies());
+            medicationsAllergies.add(currentMedicalRecord.getMedications());
+            FireAlertDTO individualPerson = new FireAlertDTO(currentMedicalRecord.getLastName(),period.getYears(), a.getPhone(),medicationsAllergies);
+            //We add each individual to a list to be returned
+            listOfCitizens.add(individualPerson);
         }
 
-        firestationDisplayer.put("firesatationNbr",selectedFirestation.getStation());
-        peopleDisplayer.put("persons",peopleList);
-
-        returningData.add(peopleDisplayer);
-        returningData.add(firestationDisplayer);
-        logger.debug("Returned data : "+returningData);
-        return returningData;
+        FireAlertCountDTO returnedData = new FireAlertCountDTO(listOfCitizens,selectedFirestation.getStation());
+        logger.debug("Returned data : "+returnedData);
+        return returnedData;
     }
 
     @GetMapping("/flood/stations")
