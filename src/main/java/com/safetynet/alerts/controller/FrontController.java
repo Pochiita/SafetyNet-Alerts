@@ -1,5 +1,7 @@
 package com.safetynet.alerts.controller;
 
+import com.safetynet.alerts.dto.ChildAlertCountDTO;
+import com.safetynet.alerts.dto.ChildAlertDTO;
 import com.safetynet.alerts.dto.FireStationCountDTO;
 import com.safetynet.alerts.dto.FireStationDTO;
 import com.safetynet.alerts.model.FireStation;
@@ -50,7 +52,6 @@ public class FrontController {
         logger.info(urlLogger());
         ListSearcher listSearcher = new ListSearcher();
         List<FireStationDTO> allSelectedPersons = new ArrayList<>();
-
         List<FireStation> fireStationsByStation = listSearcher.searchAFireStationByValue("station", stationNumber, sharedJson().getFirestations());
         if (fireStationsByStation.isEmpty()) {
             logger.error("No firestation found for the value 'station':'".concat(stationNumber).concat("'"));
@@ -91,14 +92,15 @@ public class FrontController {
     }
 
     @GetMapping("/childAlert")
-    public List<HashMap> childAlert(@RequestParam(value = "address") String address) throws IOException, ParseException {
+    public ChildAlertCountDTO childAlert(@RequestParam(value = "address") String address) throws IOException, ParseException {
         logger.info(urlLogger());
         //Setup variables that displays the json correctly
         List<HashMap> returningData = new ArrayList<>();
-        HashMap<String, List<HashMap>> minorsList = new HashMap<>();
+        //HashMap<String, List<HashMap>> minorsList = new HashMap<>();
         HashMap<String, List<HashMap>> otherResidents = new HashMap<>();
         List<HashMap> allMinors = new ArrayList<>();
         List<HashMap> allAdults = new ArrayList<>();
+
 
         //Instanciate methods that allow to find all Person by address
         ListSearcher listSearcher = new ListSearcher();
@@ -108,13 +110,14 @@ public class FrontController {
         if (listResidents.isEmpty()){
             logger.error("There is no residents for the address : "+address+" or the address doesn't exist");
 
-            return returningData;
+            return new ChildAlertCountDTO(new ArrayList<>(),new ArrayList<>());
         }
 
         //Set an index to get who is minor or not
         int index = 0;
         List<Integer> minorsIndex = new ArrayList<>();
-
+        List<ChildAlertDTO> minorsList = new ArrayList<>();
+        List<ChildAlertDTO> adultList = new ArrayList<>();
         // Array that loop over residents searching for minors and adding them to the hashmap
         for (Person c : listResidents) {
             HashMap<String, String> minorsIndividual = new HashMap<>();
@@ -127,19 +130,17 @@ public class FrontController {
             LocalDate dob = LocalDate.parse(currentPersonMedicalRecord.getBirthdate(), formatter);
             Period period = Period.between(dob, LocalDate.now());
             if (period.getYears() <= 18) {
-                minorsIndividual.put("firstName", c.getFirstName());
-                minorsIndividual.put("lastName", c.getLastName());
-                minorsIndividual.put("age", String.valueOf(period.getYears()));
-                allMinors.add(minorsIndividual);
+                ChildAlertDTO singleMinor = new ChildAlertDTO(c.getFirstName(),c.getLastName(),period.getYears());
+                minorsList.add(singleMinor);
                 minorsIndex.add(index);
             }
             index++;
         }
 
         //If there is no minors in the return empty json
-        if(allMinors.isEmpty()){
+        if(minorsList.isEmpty()){
             logger.error("There is not minor Person at this address");
-            return returningData;
+            return new ChildAlertCountDTO(new ArrayList<>(),new ArrayList<>());
         }
 
 
@@ -147,8 +148,8 @@ public class FrontController {
         int indexA = 0;
 
         for (Person c : listResidents) {
-            HashMap<String, String> adultIndividual = new HashMap<>();
             if (!minorsIndex.contains(indexA)) {
+
                 String firstName = c.getFirstName();
                 String lastName = c.getLastName();
                 String fullName = firstName.concat(lastName).toLowerCase();
@@ -156,20 +157,15 @@ public class FrontController {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
                 LocalDate dob = LocalDate.parse(currentPersonMedicalRecord.getBirthdate(), formatter);
                 Period period = Period.between(dob, LocalDate.now());
-                adultIndividual.put("firstName", c.getFirstName());
-                adultIndividual.put("lastName", c.getLastName());
-                adultIndividual.put("age", String.valueOf(period.getYears()));
-                allAdults.add(adultIndividual);
-                minorsIndex.add(index);
+                ChildAlertDTO singleAdult = new ChildAlertDTO(c.getFirstName(),c.getLastName(),period.getYears());
+                adultList.add(singleAdult);
             }
             indexA++;
         }
-        otherResidents.put("otherResidents",allAdults);
-        minorsList.put("minor",allMinors);
-        returningData.add(minorsList);
-        returningData.add(otherResidents);
+
+
         logger.debug("Returned data :"+returningData);
-        return returningData;
+        return new ChildAlertCountDTO(minorsList,adultList);
     }
 
     @GetMapping("/phoneAlert")
