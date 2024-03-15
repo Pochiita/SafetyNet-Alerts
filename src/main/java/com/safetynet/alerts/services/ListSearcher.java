@@ -50,9 +50,42 @@ public class ListSearcher {
         int index = 0;
         List<Person> listSelectedPersons =new ArrayList<Person>();
         for (Person person:persons) {
+            String firstName = person.getFirstName();
+            String lastName = person.getLastName();
+            String fullName = firstName.concat(lastName).toLowerCase();
+            if (toCompare.equals(fullName)){
+                listSelectedPersons.add(persons.get(index));
+            }
+            index++;
+        }
+        return listSelectedPersons;
+    }
+
+    public List<Person> searchPersonsInAListByName(String name, List<Person> list){
+        List<Person> persons = list;
+        String toCompare = name.toLowerCase().replaceAll("\\s", "");
+        int index = 0;
+        List<Person> listSelectedPersons =new ArrayList<Person>();
+        for (Person person:persons) {
             String cityPerson = person.getCity().toLowerCase().replaceAll("\\s", "");
 
             if (toCompare.equals(cityPerson)){
+                listSelectedPersons.add(persons.get(index));
+            }
+            index++;
+        }
+        return listSelectedPersons;
+    }
+
+    public List<Person> searchPersonsInAListByLastName(String name, List<Person> list){
+        List<Person> persons = list;
+        String toCompare = name.toLowerCase().replaceAll("\\s", "");
+        int index = 0;
+        List<Person> listSelectedPersons =new ArrayList<Person>();
+        for (Person person:persons) {
+            String lastNamePerson = person.getLastName().toLowerCase().replaceAll("\\s", "");
+
+            if (toCompare.equals(lastNamePerson)){
                 listSelectedPersons.add(persons.get(index));
             }
             index++;

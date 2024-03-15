@@ -1,7 +1,6 @@
 package com.safetynet.alerts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alerts.model.*;
-import com.safetynet.alerts.controller.CrudController;
 import com.safetynet.alerts.services.JsonReader;
 import com.safetynet.alerts.services.ListSearcher;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,8 +24,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-@WebMvcTest(controllers = CrudController.class)
-@Import(CrudController.class)
+@WebMvcTest()
 public class AlertsApplicationTests {
 
 	@Autowired
@@ -41,8 +39,7 @@ public class AlertsApplicationTests {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@InjectMocks
-	private CrudController crudController;
+
 
 	private ListSearcher listSearcher;
 

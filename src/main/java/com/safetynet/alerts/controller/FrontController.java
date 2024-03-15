@@ -1,5 +1,7 @@
 package com.safetynet.alerts.controller;
 
+import com.safetynet.alerts.dto.FireStationCountDTO;
+import com.safetynet.alerts.dto.FireStationDTO;
 import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.model.JsonElts;
 import com.safetynet.alerts.model.MedicalRecord;
@@ -44,18 +46,15 @@ public class FrontController {
     }
 
     @GetMapping("/firestation")
-    public List<HashMap> PeopleConcernedByStation(@RequestParam(value = "stationNumber") String stationNumber) throws IOException, ParseException {
+    public FireStationCountDTO PeopleConcernedByStation(@RequestParam(value = "stationNumber") String stationNumber) throws IOException, ParseException {
         logger.info(urlLogger());
-        List<HashMap> returningData = new ArrayList<>();
-        HashMap<String, List<HashMap>> rowPersons = new HashMap<>();
-        HashMap<String, Integer> personsCounting = new HashMap<>();
-        List<HashMap> allReturnedPersons = new ArrayList<>();
         ListSearcher listSearcher = new ListSearcher();
+        List<FireStationDTO> allSelectedPersons = new ArrayList<>();
 
         List<FireStation> fireStationsByStation = listSearcher.searchAFireStationByValue("station", stationNumber, sharedJson().getFirestations());
         if (fireStationsByStation.isEmpty()) {
             logger.error("No firestation found for the value 'station':'".concat(stationNumber).concat("'"));
-            return returningData;
+            return new FireStationCountDTO(new ArrayList<>(),0,0);
         }
         List<Person> allPersons = sharedJson().getPersons();
         int adultNbr = 0;
@@ -64,19 +63,15 @@ public class FrontController {
         for (FireStation a : fireStationsByStation) {
             String actualAddress = a.getAddress();
             for (Person b : allPersons) {
-                if (b.getAddress().equals(actualAddress)) {
-                    logger.debug("Setting all properties to return data");
-                    HashMap<String, String> singlePerson = new HashMap<>();
-                    singlePerson.put("firstName", b.getFirstName());
-                    singlePerson.put("lastName", b.getLastName());
-                    singlePerson.put("address", b.getAddress());
-                    singlePerson.put("phone number", b.getPhone());
-                    allReturnedPersons.add(singlePerson);
+                String firstName = b.getFirstName();
+                String lastName = b.getLastName();
+                String fullName = firstName.concat(lastName).toLowerCase();
+                MedicalRecord currentMedical = listSearcher.searchAMedicalRecordInAList(fullName, sharedJson().getMedicalrecords());
 
-                    String firstName = b.getFirstName();
-                    String lastName = b.getLastName();
-                    String fullName = firstName.concat(lastName).toLowerCase();
-                    MedicalRecord currentMedical = listSearcher.searchAMedicalRecordInAList(fullName, sharedJson().getMedicalrecords());
+                if (b.getAddress().equals(actualAddress) && currentMedical != null) {
+                    FireStationDTO singlePersonDTO = new FireStationDTO(b.getFirstName(),b.getLastName(),b.getAddress(),b.getPhone());
+                    allSelectedPersons.add(singlePersonDTO);
+                    logger.debug("Setting all properties to return data");
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
                     LocalDate dob = LocalDate.parse(currentMedical.getBirthdate(), formatter);
                     Period period = Period.between(dob, LocalDate.now());
@@ -91,14 +86,8 @@ public class FrontController {
             }
         }
 
-
-        rowPersons.put("persons", allReturnedPersons);
-        personsCounting.put("adults", adultNbr);
-        personsCounting.put("minors", minorNbr);
-        returningData.add(rowPersons);
-        returningData.add(personsCounting);
-        logger.debug("Returned data :"+returningData);
-        return returningData;
+        FireStationCountDTO toReturnData = new FireStationCountDTO(allSelectedPersons,adultNbr,minorNbr);
+        return toReturnData;
     }
 
     @GetMapping("/childAlert")
@@ -319,13 +308,18 @@ public class FrontController {
 
     @GetMapping("/personInfo")
     public void personInfo(@RequestParam(value = "firstName") String firstName,@RequestParam (value = "lastName") String lastName) throws IOException, ParseException {
-    /*
+
         List<Person> allPersons = sharedJson().getPersons();
+        String lastNameParam = lastName;
+        ListSearcher listSearcher = new ListSearcher();
 
-        for
+        List<Person> selectedPersons = listSearcher.searchPersonsInAListByLastName(lastNameParam,allPersons);
 
-        }*/
+        for(Person a : selectedPersons){
+
+        }
     }
+
     @GetMapping("/communityEmail")
     public List<String> communityEmail(@RequestParam(value = "city") String city) throws IOException, ParseException {
     logger.info(urlLogger());

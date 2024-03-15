@@ -1,7 +1,6 @@
 package com.safetynet.alerts;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.alerts.controller.CrudController;
 import com.safetynet.alerts.controller.FrontController;
 import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.model.JsonElts;
@@ -30,8 +29,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-@WebMvcTest(controllers = FrontController.class)
-@Import(FrontController.class)
+@WebMvcTest()
 public class FontControllerTests {
 
 
