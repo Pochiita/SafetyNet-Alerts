@@ -79,7 +79,7 @@ public class FontControllerTests {
     public void testChildAlert() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/childAlert")
                         .param("address", "1509 Culver St")
-                        .contentType(MediaType.APPLICATION_JSON))
+                       .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 

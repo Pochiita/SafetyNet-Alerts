@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -63,5 +64,58 @@ public class MedicalRecordServices {
             return new ResponseEntity<>("Not created", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Correctly created", HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> deleteMedicalRecord(@PathVariable String name) throws IOException {
+        logger.info(urlLogger());
+
+        List<MedicalRecord> medicalRecordList = allElements.getJson().getMedicalrecords();
+        String toCompare = name.toLowerCase();
+        int index = 0;
+        boolean canDelete = false;
+        for (MedicalRecord medicalRecordSingle:medicalRecordList) {
+            String firstName = medicalRecordSingle.getFirstName();
+            String lastName = medicalRecordSingle.getLastName();
+            String fullName = firstName.concat(lastName).toLowerCase();
+            if (toCompare.equals(fullName)){
+                canDelete = true;
+                break;
+            }
+
+            index++;
+        }
+        if (canDelete) {
+            medicalRecordList.remove(index);
+            allElements.getJson().setMedicalrecords(medicalRecordList);
+            String msg = " 'MedicalRecord' correctly deleted - Value:".concat(name);
+            logger.info(msg);
+
+        }else{
+            String msg = " 'MedicalRecord' couldn't be deleted - Not found by value :".concat(name);
+            logger.error(msg);
+            return new ResponseEntity<>("Not deleted", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("Correctly deleted",HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> modifyMedicalRecord (@PathVariable String name,@RequestParam(value ="birthdate") String birthDate,@RequestParam(value="medication") List<String> medication,@RequestParam(value="allergies") List<String> allergies) throws IOException {
+        logger.info(urlLogger());
+
+        List<MedicalRecord> medicalRecordList = allElements.getJson().getMedicalrecords();
+        MedicalRecord selectedMedicalRecord = listSearcher.searchAMedicalRecordInAList(name,medicalRecordList);
+        if (selectedMedicalRecord != null) {
+            selectedMedicalRecord.setBirthDate(birthDate);
+            selectedMedicalRecord.setMedications(medication);
+            selectedMedicalRecord.setAllergies(allergies);
+            String msg = " 'MedicalRecord' correctly modified - Value:".concat(name);
+            logger.info(msg);
+            return new ResponseEntity<>("Correctly modified", HttpStatus.OK);
+
+        }else{
+            String msg = " 'Person' couldn't be modified - Not found by value :".concat(name);
+            logger.error(msg);
+            return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
+        }
     }
 }
