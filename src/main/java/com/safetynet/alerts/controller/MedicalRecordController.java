@@ -4,6 +4,7 @@ import com.safetynet.alerts.model.JsonElts;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.services.JsonReader;
 import com.safetynet.alerts.services.ListSearcher;
+import com.safetynet.alerts.services.MedicalRecordServices;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,9 @@ public class MedicalRecordController {
 
     @Autowired
     private JsonReader jsonReader;
+
+    @Autowired
+    private MedicalRecordServices medicalRecordServices;
 
     Logger logger = LoggerFactory.getLogger(JsonElts.class);
 
