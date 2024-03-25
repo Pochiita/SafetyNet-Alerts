@@ -45,36 +45,7 @@ public class MedicalRecordController {
 
     @PostMapping("/medicalrecords")
     public ResponseEntity<String> createMedicalRecord (@RequestParam(value ="firstName") String firstName, @RequestParam(value ="lastName") String lastName, @RequestParam(value ="birthdate") String birthDate, @RequestParam(value="medication") List<String> medication, @RequestParam(value="allergies") List<String> allergies) throws IOException {
-        logger.info(urlLogger());
-
-        List<MedicalRecord> medicalRecordsList = sharedJson().getMedicalrecords();
-        int listSize = medicalRecordsList.size();
-        MedicalRecord newMedicalRecord = new MedicalRecord();
-        String[] checkingBirthDate = birthDate.split("/");
-        int index = 0;
-        logger.debug("Checking that the 'birthdate' url parameter contains only digits");
-        for(String a : checkingBirthDate){
-            if (!a.matches("\\d+")) {
-                logger.error("'Birthdate' parameter contained digits");
-                return new ResponseEntity<>("Birthdate must only contains digits", HttpStatus.BAD_REQUEST);
-            }
-            index++;
-        }
-        newMedicalRecord.setFirstName(firstName);
-        newMedicalRecord.setLastName(lastName);
-        newMedicalRecord.setBirthDate(birthDate);
-        newMedicalRecord.setMedications(medication);
-        newMedicalRecord.setAllergies(allergies);
-        medicalRecordsList.add(newMedicalRecord);
-        if (medicalRecordsList.size()>listSize){
-            String msg = " 'MedicalRecord' correctly created - 'MedicalRecord' :".concat(firstName).concat(lastName);
-            logger.info(msg);
-        }else{
-            String msg = " 'MedicalRecord' couldn't be created";
-            logger.error(msg);
-            return new ResponseEntity<>("Not created", HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>("Correctly created", HttpStatus.OK);
+        return medicalRecordServices.createMedicalRecord(firstName, lastName, birthDate, medication, allergies);
     }
 
     @DeleteMapping("/medicalrecords/{name}")
