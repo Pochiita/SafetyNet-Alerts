@@ -73,22 +73,7 @@ public class ListSearcher {
         }
         return listSelectedPersons;
     }
-
-    public List<Person> searchPersonsInAListByLastName(String name, List<Person> list){
-        List<Person> persons = list;
-        String toCompare = name.toLowerCase().replaceAll("\\s", "");
-        int index = 0;
-        List<Person> listSelectedPersons =new ArrayList<Person>();
-        for (Person person:persons) {
-            String lastNamePerson = person.getLastName().toLowerCase().replaceAll("\\s", "");
-
-            if (toCompare.equals(lastNamePerson)){
-                listSelectedPersons.add(persons.get(index));
-            }
-            index++;
-        }
-        return listSelectedPersons;
-    }
+    
 
     public FireStation searchAFireStationByAddress(String address, List<FireStation> list){
         List<FireStation> firestations = list;
