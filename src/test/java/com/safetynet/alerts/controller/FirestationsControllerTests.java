@@ -7,10 +7,13 @@ import com.safetynet.alerts.services.ListSearcher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -142,4 +145,78 @@ public class FirestationsControllerTests {
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
     }
+
+
+    @Test
+    public void testPeopleConcernedByStation() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/firestation")
+                        .param("stationNumber", "1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testPeopleConcernedByInexistantStation() throws Exception {
+        String inexistantFireStation = "999999";
+        String json = "{\n" +
+                "\t\"personsStation\": [],\n" +
+                "\t\"totalAdultsNumber\": -1,\n" +
+                "\t\"totalChildrenNumber\": -1\n" +
+                "}";
+        mockMvc.perform(MockMvcRequestBuilders.get("/firestation")
+                        .param("stationNumber", inexistantFireStation)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(json));
+
+    }
+
+    @Test
+    public void testFloodAlert()throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/flood/stations")
+                        .param("stations", "1,2,3")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
+    @Test
+    public void testFloodAlertInexistantStation()throws Exception {
+        HashMap<String,List<HashMap>> addressDisplayer = new HashMap<>();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/flood/stations")
+                        .param("stations", "acf,7fd8,zae")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(addressDisplayer.toString()));
+
+    }
+
+    @Test
+    public void testFireAlert()throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/fire")
+                        .param("address", "1509 Culver St")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
+    @Test
+    public void testFireAlertInexistantAddress()throws Exception {
+        List<HashMap> returningData = new ArrayList<>();
+
+        String json = "{\n" +
+                "\t\"citizens\": [],\n" +
+                "\t\"nbrOfFireStation\": \"-1\"\n" +
+                "}";
+        mockMvc.perform(MockMvcRequestBuilders.get("/fire")
+                        .param("address", "abcdef")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(json));
+
+    }
+
+
 }
