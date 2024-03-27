@@ -7,7 +7,7 @@ public class PersonInfoDTO {
     private final String name;
     private final int age;
     private final String mail;
-    private final List<List<String>> MedicalRecords ;
+    private final List<List<String>> MedicalRecords;
 
     public PersonInfoDTO(String name, int age, String mail, List<List<String>> medicalRecords) {
         this.name = name;
