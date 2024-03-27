@@ -64,12 +64,7 @@ public class PersonServices {
         if (canDelete) {
             people.remove(index);
             allElements.getJson().setPersons(people);
-            String msg = " 'Person' correctly deleted - Value:".concat(name);
-            logger.info(msg);
-
         } else {
-            String msg = " 'Person' couldn't be deleted - Not found by value :".concat(name);
-            logger.error(msg);
             return new ResponseEntity<>("Not deleted", HttpStatus.BAD_REQUEST);
         }
 
@@ -87,13 +82,8 @@ public class PersonServices {
             selectedPerson.setZip(zip);
             selectedPerson.setPhone(phone);
             selectedPerson.setEmail(mail);
-            String msg = " 'Person' correctly modified - Value:".concat(name);
-            logger.info(msg);
             return new ResponseEntity<>("Correctly modified", HttpStatus.OK);
-
         } else {
-            String msg = " 'Person' couldn't be modified - Not found by value :".concat(name);
-            logger.error(msg);
             return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
         }
     }
@@ -111,12 +101,7 @@ public class PersonServices {
         newPerson.setPhone(phone);
         newPerson.setEmail(mail);
         persons.add(newPerson);
-        if (persons.size() > listSize) {
-            String msg = " 'Person' correctly created - 'Person' :".concat(firstName).concat(lastName);
-            logger.info(msg);
-        } else {
-            String msg = " 'Person' couldn't be created";
-            logger.error(msg);
+        if (persons.size() == listSize) {
             return new ResponseEntity<>("Not created", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Correctly created", HttpStatus.OK);
@@ -184,9 +169,6 @@ public class PersonServices {
             }
             indexA++;
         }
-
-
-        logger.debug("Returned data :" + new ChildAlertCountDTO(minorsList, adultList));
         return new ChildAlertCountDTO(minorsList, adultList);
     }
 
@@ -209,7 +191,6 @@ public class PersonServices {
                 phonesList.add(a.getPhone());
             }
         }
-        logger.debug("Returned data :" + new PhoneAlertDTO(phonesList));
         return new PhoneAlertDTO(phonesList);
     }
 
@@ -237,21 +218,19 @@ public class PersonServices {
         }
 
         PersonInfoCountDTO returnedData = new PersonInfoCountDTO(concernedPersons);
-        logger.debug("Returned data " + returnedData);
         return returnedData;
     }
 
     public CommunityMailDTO communityEmail(@RequestParam(value = "city") String city) throws IOException, ParseException {
         logger.info(urlLogger());
-        List<String> allMails= new ArrayList<>();
+        List<String> allMails = new ArrayList<>();
 
         ListSearcher listSearcher = new ListSearcher();
 
-        List<Person> personByCity = listSearcher.searchPersonsInAListByCity(city,allElements.getJson().getPersons());
-        for (Person a : personByCity){
+        List<Person> personByCity = listSearcher.searchPersonsInAListByCity(city, allElements.getJson().getPersons());
+        for (Person a : personByCity) {
             allMails.add(a.getEmail());
         }
-        logger.debug("Returned data "+allMails);
         return new CommunityMailDTO(allMails);
     }
 }

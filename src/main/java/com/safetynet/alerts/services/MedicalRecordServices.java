@@ -33,7 +33,7 @@ public class MedicalRecordServices {
         return "The URL used to access this route is: " + url + " and the IP address is: " + ipAddress;
     }
 
-    public ResponseEntity<String> createMedicalRecord (@RequestParam(value ="firstName") String firstName, @RequestParam(value ="lastName") String lastName, @RequestParam(value ="birthdate") String birthDate, @RequestParam(value="medication") List<String> medication, @RequestParam(value="allergies") List<String> allergies) throws IOException {
+    public ResponseEntity<String> createMedicalRecord(@RequestParam(value = "firstName") String firstName, @RequestParam(value = "lastName") String lastName, @RequestParam(value = "birthdate") String birthDate, @RequestParam(value = "medication") List<String> medication, @RequestParam(value = "allergies") List<String> allergies) throws IOException {
         logger.info(urlLogger());
 
         List<MedicalRecord> medicalRecordsList = allElements.getJson().getMedicalrecords();
@@ -42,7 +42,7 @@ public class MedicalRecordServices {
         String[] checkingBirthDate = birthDate.split("/");
         int index = 0;
         logger.debug("Checking that the 'birthdate' url parameter contains only digits");
-        for(String a : checkingBirthDate){
+        for (String a : checkingBirthDate) {
             if (!a.matches("\\d+")) {
                 logger.error("'Birthdate' parameter contained digits");
                 return new ResponseEntity<>("Birthdate must only contains digits", HttpStatus.BAD_REQUEST);
@@ -55,12 +55,7 @@ public class MedicalRecordServices {
         newMedicalRecord.setMedications(medication);
         newMedicalRecord.setAllergies(allergies);
         medicalRecordsList.add(newMedicalRecord);
-        if (medicalRecordsList.size()>listSize){
-            String msg = " 'MedicalRecord' correctly created - 'MedicalRecord' :".concat(firstName).concat(lastName);
-            logger.info(msg);
-        }else{
-            String msg = " 'MedicalRecord' couldn't be created";
-            logger.error(msg);
+        if (medicalRecordsList.size() == listSize) {
             return new ResponseEntity<>("Not created", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Correctly created", HttpStatus.OK);
@@ -73,11 +68,11 @@ public class MedicalRecordServices {
         String toCompare = name.toLowerCase();
         int index = 0;
         boolean canDelete = false;
-        for (MedicalRecord medicalRecordSingle:medicalRecordList) {
+        for (MedicalRecord medicalRecordSingle : medicalRecordList) {
             String firstName = medicalRecordSingle.getFirstName();
             String lastName = medicalRecordSingle.getLastName();
             String fullName = firstName.concat(lastName).toLowerCase();
-            if (toCompare.equals(fullName)){
+            if (toCompare.equals(fullName)) {
                 canDelete = true;
                 break;
             }
@@ -87,34 +82,25 @@ public class MedicalRecordServices {
         if (canDelete) {
             medicalRecordList.remove(index);
             allElements.getJson().setMedicalrecords(medicalRecordList);
-            String msg = " 'MedicalRecord' correctly deleted - Value:".concat(name);
-            logger.info(msg);
-
-        }else{
-            String msg = " 'MedicalRecord' couldn't be deleted - Not found by value :".concat(name);
-            logger.error(msg);
+        } else {
             return new ResponseEntity<>("Not deleted", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("Correctly deleted",HttpStatus.OK);
+        return new ResponseEntity<>("Correctly deleted", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> modifyMedicalRecord (@PathVariable String name,@RequestParam(value ="birthdate") String birthDate,@RequestParam(value="medication") List<String> medication,@RequestParam(value="allergies") List<String> allergies) throws IOException {
+    public ResponseEntity<String> modifyMedicalRecord(@PathVariable String name, @RequestParam(value = "birthdate") String birthDate, @RequestParam(value = "medication") List<String> medication, @RequestParam(value = "allergies") List<String> allergies) throws IOException {
         logger.info(urlLogger());
 
         List<MedicalRecord> medicalRecordList = allElements.getJson().getMedicalrecords();
-        MedicalRecord selectedMedicalRecord = listSearcher.searchAMedicalRecordInAList(name,medicalRecordList);
+        MedicalRecord selectedMedicalRecord = listSearcher.searchAMedicalRecordInAList(name, medicalRecordList);
         if (selectedMedicalRecord != null) {
             selectedMedicalRecord.setBirthDate(birthDate);
             selectedMedicalRecord.setMedications(medication);
             selectedMedicalRecord.setAllergies(allergies);
-            String msg = " 'MedicalRecord' correctly modified - Value:".concat(name);
-            logger.info(msg);
             return new ResponseEntity<>("Correctly modified", HttpStatus.OK);
 
-        }else{
-            String msg = " 'Person' couldn't be modified - Not found by value :".concat(name);
-            logger.error(msg);
+        } else {
             return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
         }
     }

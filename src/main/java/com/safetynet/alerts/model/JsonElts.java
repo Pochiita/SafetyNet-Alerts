@@ -19,6 +19,7 @@ public class JsonElts {
     public List<Person> getPersons() {
         return persons;
     }
+
     public List<FireStation> getFirestations() {
         return firestations;
     }

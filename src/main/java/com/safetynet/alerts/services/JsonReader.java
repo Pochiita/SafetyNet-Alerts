@@ -1,4 +1,5 @@
 package com.safetynet.alerts.services;
+
 import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,10 +15,12 @@ public class JsonReader {
 
     private final ObjectMapper objectMapper;
     private JsonElts jsonElts;
+
     public JsonReader() throws IOException, ParseException {
-       this.objectMapper = new ObjectMapper();
+        this.objectMapper = new ObjectMapper();
 
     }
+
     @PostConstruct
     public void getWholeJson() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -25,13 +28,9 @@ public class JsonReader {
 
     }
 
-    public JsonElts getJson () throws IOException {
-        return  jsonElts;
+    public JsonElts getJson() throws IOException {
+        return jsonElts;
     }
-
-
-
-
 
 
 }

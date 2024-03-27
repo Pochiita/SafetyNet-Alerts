@@ -44,18 +44,46 @@ public class MedicalRecordController {
     }
 
     @PostMapping("/medicalrecords")
-    public ResponseEntity<String> createMedicalRecord (@RequestParam(value ="firstName") String firstName, @RequestParam(value ="lastName") String lastName, @RequestParam(value ="birthdate") String birthDate, @RequestParam(value="medication") List<String> medication, @RequestParam(value="allergies") List<String> allergies) throws IOException {
-        return medicalRecordServices.createMedicalRecord(firstName, lastName, birthDate, medication, allergies);
+    public ResponseEntity<String> createMedicalRecord(@RequestParam(value = "firstName") String firstName, @RequestParam(value = "lastName") String lastName, @RequestParam(value = "birthdate") String birthDate, @RequestParam(value = "medication") List<String> medication, @RequestParam(value = "allergies") List<String> allergies) throws IOException {
+        ResponseEntity<String> response =  medicalRecordServices.createMedicalRecord(firstName, lastName, birthDate, medication, allergies);
+
+        if (response.getStatusCode().is2xxSuccessful()){
+            String msg = " 'MedicalRecord' correctly created";
+            logger.info(msg);
+        }else{
+            String msg = " 'MedicalRecord' couldn't be created";
+            logger.error(msg);
+        }
+
+        return response;
     }
 
     @DeleteMapping("/medicalrecords/{name}")
     public ResponseEntity<String> deleteMedicalRecord(@PathVariable String name) throws IOException {
-      return medicalRecordServices.deleteMedicalRecord(name);
+        ResponseEntity<String> response = medicalRecordServices.deleteMedicalRecord(name);
+
+        if (response.getStatusCode().is2xxSuccessful()){
+            String msg = " 'MedicalRecord' correctly modified";
+            logger.info(msg);
+        }else{
+            String msg = " 'MedicalRecord' couldn't be modified";
+            logger.error(msg);
+        }
+        return response;
     }
 
     @PutMapping("/medicalrecords/{name}")
-    public ResponseEntity<String> modifyMedicalRecord (@PathVariable String name,@RequestParam(value ="birthdate") String birthDate,@RequestParam(value="medication") List<String> medication,@RequestParam(value="allergies") List<String> allergies) throws IOException {
-        return medicalRecordServices.modifyMedicalRecord(name, birthDate, medication, allergies);
+    public ResponseEntity<String> modifyMedicalRecord(@PathVariable String name, @RequestParam(value = "birthdate") String birthDate, @RequestParam(value = "medication") List<String> medication, @RequestParam(value = "allergies") List<String> allergies) throws IOException {
+        ResponseEntity<String> response = medicalRecordServices.modifyMedicalRecord(name, birthDate, medication, allergies);
+
+        if (response.getStatusCode().is2xxSuccessful()){
+            String msg = " 'MedicalRecord' correctly deleted";
+            logger.info(msg);
+        }else{
+            String msg = " 'MedicalRecord' couldn't be deleted";
+            logger.error(msg);
+        }
+        return response;
     }
 
 

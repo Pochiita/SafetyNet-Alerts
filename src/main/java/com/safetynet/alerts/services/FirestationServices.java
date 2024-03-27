@@ -42,7 +42,7 @@ public class FirestationServices {
         return "The URL used to access this route is: " + url + " and the IP address is: " + ipAddress;
     }
 
-    public ResponseEntity<String> createFirestation (String address, String station) throws IOException {
+    public ResponseEntity<String> createFirestation(String address, String station) throws IOException {
         logger.info(urlLogger());
         List<FireStation> fireStations = allElements.getJson().getFirestations();
         int listSize = fireStations.size();
@@ -50,68 +50,57 @@ public class FirestationServices {
         newFirestation.setAddress(address);
         newFirestation.setStation(station);
         fireStations.add(newFirestation);
-        if (fireStations.size()>listSize){
-            String msg = " 'Firestation' correctly created - 'FireStation' :".concat(newFirestation.getStation()).concat(" - ").concat(newFirestation.getAddress());
-            logger.info(msg);
-        }else{
-            String msg = " 'Firestation' couldn't be created";
-            logger.error(msg);
+        if (fireStations.size() == listSize) {
             return new ResponseEntity<>("Not created", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Correctly created", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> modifyStation (@PathVariable String address, @RequestParam(value="station") String station) throws IOException {
+    public ResponseEntity<String> modifyStation(@PathVariable String address, @RequestParam(value = "station") String station) throws IOException {
         logger.info(urlLogger());
         List<FireStation> fireStations = allElements.getJson().getFirestations();
         FireStation selectedFirestation = listSearcher.searchAFireStationByAddress(address, fireStations);
         if (selectedFirestation != null) {
             selectedFirestation.setStation(station);
-            String msg = " 'Firestation' correctly modified - New station number:".concat(selectedFirestation.getStation());
-            logger.info(msg);
             return new ResponseEntity<>("Correctly modified", HttpStatus.OK);
-
         } else {
-            String msg = " 'Firestation' couldn't be modified - Not found by value :".concat(address);
-            logger.error(msg);
             return new ResponseEntity<>("Not modified", HttpStatus.BAD_REQUEST);
         }
     }
 
 
-    public ResponseEntity<String> deleteFirestations(@RequestParam(value="queryby") String param, @RequestParam(value="option") String option) throws IOException {
+    public ResponseEntity<String> deleteFirestations(@RequestParam(value = "queryby") String param, @RequestParam(value = "option") String option) throws IOException {
         logger.info(urlLogger());
 
         List<FireStation> fireStations = allElements.getJson().getFirestations();
         int index = 0;
         boolean canDelete = false;
         logger.debug("Checking 'queryby' url parameter value");
-        if (!Objects.equals(param, "address") && !Objects.equals(param, "station")){
+        if (!Objects.equals(param, "address") && !Objects.equals(param, "station")) {
             logger.error("Incorrect value 'queryby' must be either 'address' or 'station' ");
             return new ResponseEntity<>("Incorrect value 'queryby' must be either 'address' or 'station' ", HttpStatus.BAD_REQUEST);
         }
         logger.debug("Checking that the 'station' url parameter contains only digits");
-        if (Objects.equals(param, "station")){
-            if (!option.matches("\\d+")){
+        if (Objects.equals(param, "station")) {
+            if (!option.matches("\\d+")) {
                 logger.error("Incorrect value 'option' must be digits-only'");
                 return new ResponseEntity<>("Incorrect value 'option' must be digits-only' ", HttpStatus.BAD_REQUEST);
             }
         }
-        List<FireStation> selectedFireStations = listSearcher.searchAFireStationByValue(param,option,fireStations);
-        if (selectedFireStations.size() >0){
-            for(FireStation firestation : selectedFireStations){
+        List<FireStation> selectedFireStations = listSearcher.searchAFireStationByValue(param, option, fireStations);
+        if (selectedFireStations.size() > 0) {
+            for (FireStation firestation : selectedFireStations) {
                 FireStation currentFirestation = firestation;
                 String logMsg = "Station with address : ".concat(currentFirestation.getAddress()).concat("and station number :").concat(currentFirestation.getStation()).concat(" Deleted");
                 fireStations.remove(firestation);
-                logger.info(logMsg);
             }
-        }else{
-            logger.error("No firestation selected");
+        } else {
 
-            return new ResponseEntity<>("No Firestation selected",HttpStatus.BAD_REQUEST);
+
+            return new ResponseEntity<>("No Firestation selected", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("Correctly deleted",HttpStatus.OK);
+        return new ResponseEntity<>("Correctly deleted", HttpStatus.OK);
     }
 
     public FireStationCountDTO PeopleConcernedByStation(@RequestParam(value = "stationNumber") String stationNumber) throws IOException, ParseException {
@@ -121,7 +110,7 @@ public class FirestationServices {
         List<FireStation> fireStationsByStation = listSearcher.searchAFireStationByValue("station", stationNumber, allElements.getJson().getFirestations());
         if (fireStationsByStation.isEmpty()) {
             logger.error("No firestation found for the value 'station':'".concat(stationNumber).concat("'"));
-            return new FireStationCountDTO(new ArrayList<>(),-1,-1);
+            return new FireStationCountDTO(new ArrayList<>(), -1, -1);
         }
         List<Person> allPersons = allElements.getJson().getPersons();
         int adultNbr = 0;
@@ -136,7 +125,7 @@ public class FirestationServices {
                 MedicalRecord currentMedical = listSearcher.searchAMedicalRecordInAList(fullName, allElements.getJson().getMedicalrecords());
 
                 if (b.getAddress().equals(actualAddress) && currentMedical != null) {
-                    FireStationDTO singlePersonDTO = new FireStationDTO(b.getFirstName(),b.getLastName(),b.getAddress(),b.getPhone());
+                    FireStationDTO singlePersonDTO = new FireStationDTO(b.getFirstName(), b.getLastName(), b.getAddress(), b.getPhone());
                     allSelectedPersons.add(singlePersonDTO);
                     logger.debug("Setting all properties to return data");
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
@@ -153,7 +142,7 @@ public class FirestationServices {
             }
         }
 
-        FireStationCountDTO toReturnData = new FireStationCountDTO(allSelectedPersons,adultNbr,minorNbr);
+        FireStationCountDTO toReturnData = new FireStationCountDTO(allSelectedPersons, adultNbr, minorNbr);
         return toReturnData;
     }
 
@@ -164,9 +153,9 @@ public class FirestationServices {
         List<Person> selectedPersons = listSearcher.searchPersonsInAListByAddress(address, allElements.getJson().getPersons());
         FireStation selectedFirestation = listSearcher.searchAFireStationByAddress(address, allElements.getJson().getFirestations());
 
-        if (selectedFirestation == null){
-            logger.error("No firestation match this address : "+address);
-            return new FireAlertCountDTO(new ArrayList<>(),"-1");
+        if (selectedFirestation == null) {
+            logger.error("No firestation match this address : " + address);
+            return new FireAlertCountDTO(new ArrayList<>(), "-1");
         }
         List<FireAlertDTO> listOfCitizens = new ArrayList<>();
         for (Person a : selectedPersons) {
@@ -184,39 +173,38 @@ public class FirestationServices {
             List<List<String>> medicationsAllergies = new ArrayList<>();
             medicationsAllergies.add(currentMedicalRecord.getAllergies());
             medicationsAllergies.add(currentMedicalRecord.getMedications());
-            FireAlertDTO individualPerson = new FireAlertDTO(currentMedicalRecord.getLastName(),period.getYears(), a.getPhone(),medicationsAllergies);
+            FireAlertDTO individualPerson = new FireAlertDTO(currentMedicalRecord.getLastName(), period.getYears(), a.getPhone(), medicationsAllergies);
             //We add each individual to a list to be returned
             listOfCitizens.add(individualPerson);
         }
 
-        FireAlertCountDTO returnedData = new FireAlertCountDTO(listOfCitizens,selectedFirestation.getStation());
-        logger.debug("Returned data : "+returnedData);
+        FireAlertCountDTO returnedData = new FireAlertCountDTO(listOfCitizens, selectedFirestation.getStation());
         return returnedData;
     }
 
     public FloodAlertCountDTO floodAlert(@RequestParam(value = "stations") List<String> stations) throws IOException, ParseException {
 
         logger.info(urlLogger());
-        HashMap<String,List<HashMap>> addressDisplayer = new HashMap<>();
+        HashMap<String, List<HashMap>> addressDisplayer = new HashMap<>();
         List<HashMap> allAddresses = new ArrayList<>();
 
         ListSearcher listSearcher = new ListSearcher();
         List<FireStation> firestationList = new ArrayList<>();
 
-        for (String stationNbr : stations){
-            List<FireStation> tmpFireStation = listSearcher.searchAFireStationByValue("station",stationNbr,allElements.getJson().getFirestations());
-            for(FireStation a:tmpFireStation){
+        for (String stationNbr : stations) {
+            List<FireStation> tmpFireStation = listSearcher.searchAFireStationByValue("station", stationNbr, allElements.getJson().getFirestations());
+            for (FireStation a : tmpFireStation) {
                 firestationList.add(a);
             }
         }
 
         List<FloodAlertHousesDTO> listOfHouses = new ArrayList<>();
-        List <FloodAlertPersonDTO> listOfPersons = new ArrayList<>();
+        List<FloodAlertPersonDTO> listOfPersons = new ArrayList<>();
 
-        for (FireStation fireStation:firestationList){
+        for (FireStation fireStation : firestationList) {
             List<Person> selectedPersons = listSearcher.searchPersonsInAListByAddress(fireStation.getAddress(), allElements.getJson().getPersons());
 
-            for (Person a : selectedPersons){
+            for (Person a : selectedPersons) {
 
                 //Concat name
                 String firstName = a.getFirstName();
@@ -231,16 +219,15 @@ public class FirestationServices {
                 List<List<String>> medicationAllergies = new ArrayList<>();
                 medicationAllergies.add(currentMedicalRecord.getMedications());
                 medicationAllergies.add(currentMedicalRecord.getAllergies());
-                FloodAlertPersonDTO individualPerson = new FloodAlertPersonDTO(a.getLastName(),a.getPhone(),period.getYears(),medicationAllergies);
+                FloodAlertPersonDTO individualPerson = new FloodAlertPersonDTO(a.getLastName(), a.getPhone(), period.getYears(), medicationAllergies);
                 listOfPersons.add(individualPerson);
 
             }
-            FloodAlertHousesDTO singleHouse = new FloodAlertHousesDTO(fireStation.getAddress(),listOfPersons);
+            FloodAlertHousesDTO singleHouse = new FloodAlertHousesDTO(fireStation.getAddress(), listOfPersons);
             listOfHouses.add(singleHouse);
         }
-        addressDisplayer.put("addresses",allAddresses);
+        addressDisplayer.put("addresses", allAddresses);
         FloodAlertCountDTO returnedData = new FloodAlertCountDTO(listOfHouses);
-        logger.debug("Returned data"+addressDisplayer);
         return returnedData;
 
     }

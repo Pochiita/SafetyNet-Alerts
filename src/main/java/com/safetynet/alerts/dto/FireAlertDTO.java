@@ -12,7 +12,6 @@ public class FireAlertDTO {
     private final List<List<String>> MedialRecords;
 
 
-
     public FireAlertDTO(String lastName, int age, String phoneNumber, List<List<String>> medialRecords) {
         this.lastName = lastName;
         this.age = age;

@@ -8,8 +8,8 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = "com.safetynet.alerts")
 public class AlertsApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AlertsApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(AlertsApplication.class, args);
+    }
 
 }

@@ -18,6 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
+
 @WebMvcTest
 public class PersonsControllerTests {
 
@@ -183,15 +184,16 @@ public class PersonsControllerTests {
     }
 
     @Test
-    public void testCommunityEmail()throws Exception {
+    public void testCommunityEmail() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/communityEmail")
                         .param("city", "Culver")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
     }
+
     @Test
-    public void testCommunityEmailInexistantCity()throws Exception {
+    public void testCommunityEmailInexistantCity() throws Exception {
         List<String> returningData = new ArrayList<>();
         String json = "{\"mails\":[]}";
         mockMvc.perform(MockMvcRequestBuilders.get("/communityEmail")
@@ -203,20 +205,20 @@ public class PersonsControllerTests {
     }
 
     @Test
-    public void testPersonInfo()throws Exception{
+    public void testPersonInfo() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/personinfo")
-            .param("firstName", "Zach")
-            .param("lastName","Zemicks")
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.status().isOk());
+                        .param("firstName", "Zach")
+                        .param("lastName", "Zemicks")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    public void testInexistantPersonInfo()throws Exception{
+    public void testInexistantPersonInfo() throws Exception {
         String json = "{\n" + "\t\"persons\": []\n" + "}";
         mockMvc.perform(MockMvcRequestBuilders.get("/personinfo")
                         .param("firstName", "Je")
-                        .param("lastName","Nexistepas")
+                        .param("lastName", "Nexistepas")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(json));

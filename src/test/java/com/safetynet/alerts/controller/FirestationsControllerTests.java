@@ -30,118 +30,119 @@ public class FirestationsControllerTests {
     private MockMvc mockMvc;
 
     private ListSearcher listSearcher;
+
     @Test
-    public void createAFireStation()throws Exception{
+    public void createAFireStation() throws Exception {
         listSearcher = new ListSearcher();
         JsonElts jsonElts = jsonReader.getJson();
         int listSize = jsonElts.getFirestations().size();
         mockMvc.perform(MockMvcRequestBuilders.post("/firestation")
-                        .param("address","test")
-                        .param("station","test"))
+                        .param("address", "test")
+                        .param("station", "test"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        FireStation fireStation = listSearcher.searchAFireStationByAddress("test",jsonElts.getFirestations());
+        FireStation fireStation = listSearcher.searchAFireStationByAddress("test", jsonElts.getFirestations());
 
-        assertEquals(listSize+1,jsonElts.getFirestations().size());
+        assertEquals(listSize + 1, jsonElts.getFirestations().size());
         assertNotNull(fireStation);
     }
 
     @Test
-    public void cantCreateAFireStation()throws Exception{
+    public void cantCreateAFireStation() throws Exception {
         listSearcher = new ListSearcher();
         JsonElts jsonElts = jsonReader.getJson();
         int listSize = jsonElts.getFirestations().size();
         mockMvc.perform(MockMvcRequestBuilders.post("/firestation")
-                        .param("address","test"))
+                        .param("address", "test"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
-        assertEquals(listSize,jsonElts.getFirestations().size());
-        FireStation fireStation = listSearcher.searchAFireStationByAddress("test",jsonElts.getFirestations());
+        assertEquals(listSize, jsonElts.getFirestations().size());
+        FireStation fireStation = listSearcher.searchAFireStationByAddress("test", jsonElts.getFirestations());
         assertNull(fireStation);
 
     }
 
     @Test
-    public void canPutAFirestation()throws Exception{
+    public void canPutAFirestation() throws Exception {
         listSearcher = new ListSearcher();
         JsonElts jsonElts = jsonReader.getJson();
         mockMvc.perform(MockMvcRequestBuilders.put("/firestation/951 LoneTree Rd")
-            .param("station","55"))
-            .andExpect(MockMvcResultMatchers.status().isOk());
-        FireStation fireStation = listSearcher.searchAFireStationByAddress("951 LoneTree Rd",jsonElts.getFirestations());
-        assertEquals(fireStation.getStation(),"55");
+                        .param("station", "55"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+        FireStation fireStation = listSearcher.searchAFireStationByAddress("951 LoneTree Rd", jsonElts.getFirestations());
+        assertEquals(fireStation.getStation(), "55");
     }
 
     @Test
-    public void InexistantPutFirestation()throws Exception{
+    public void InexistantPutFirestation() throws Exception {
         listSearcher = new ListSearcher();
         JsonElts jsonElts = jsonReader.getJson();
-        FireStation fireStation = listSearcher.searchAFireStationByAddress("3rdst",jsonElts.getFirestations());
+        FireStation fireStation = listSearcher.searchAFireStationByAddress("3rdst", jsonElts.getFirestations());
         mockMvc.perform(MockMvcRequestBuilders.put("/firestation/3rdst"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
         assertNull(fireStation);
     }
 
     @Test
-    public void canDeleteFireStationByStation ()throws Exception{
+    public void canDeleteFireStationByStation() throws Exception {
         listSearcher = new ListSearcher();
         JsonElts jsonElts = jsonReader.getJson();
-        List<FireStation> firestations = listSearcher.searchAFireStationByValue("station","1",jsonElts.getFirestations());
+        List<FireStation> firestations = listSearcher.searchAFireStationByValue("station", "1", jsonElts.getFirestations());
         assertNotNull(firestations);
         System.out.println(jsonElts.getFirestations().size());
-        int toCompareListSize = jsonElts.getFirestations().size()-firestations.size();
+        int toCompareListSize = jsonElts.getFirestations().size() - firestations.size();
         mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
-                        .param("queryby","station")
-                        .param("option","1"))
+                        .param("queryby", "station")
+                        .param("option", "1"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        assertEquals(jsonElts.getFirestations().size(),toCompareListSize);
+        assertEquals(jsonElts.getFirestations().size(), toCompareListSize);
     }
 
     @Test
-    public void canDeleteFireStationByAddress()throws Exception{
+    public void canDeleteFireStationByAddress() throws Exception {
         listSearcher = new ListSearcher();
         JsonElts jsonElts = jsonReader.getJson();
-        List<FireStation> firestations = listSearcher.searchAFireStationByValue("address","1509 Culver St",jsonElts.getFirestations());
+        List<FireStation> firestations = listSearcher.searchAFireStationByValue("address", "1509 Culver St", jsonElts.getFirestations());
         assertNotNull(firestations);
-        int toCompareListSize = jsonElts.getFirestations().size()-firestations.size();
+        int toCompareListSize = jsonElts.getFirestations().size() - firestations.size();
         mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
-                        .param("queryby","address")
-                        .param("option","1509 Culver St"))
+                        .param("queryby", "address")
+                        .param("option", "1509 Culver St"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        assertEquals(jsonElts.getFirestations().size(),toCompareListSize);
+        assertEquals(jsonElts.getFirestations().size(), toCompareListSize);
     }
 
     @Test
-    public void cantDeleteFireStationBadParamAddress()throws Exception{
+    public void cantDeleteFireStationBadParamAddress() throws Exception {
         listSearcher = new ListSearcher();
         JsonElts jsonElts = jsonReader.getJson();
-        List<FireStation> firestations = listSearcher.searchAFireStationByValue("adres","1509 Culver St",jsonElts.getFirestations());
-        assertEquals(firestations.size(),0);
+        List<FireStation> firestations = listSearcher.searchAFireStationByValue("adres", "1509 Culver St", jsonElts.getFirestations());
+        assertEquals(firestations.size(), 0);
         mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
-                        .param("queryby","addres")
-                        .param("option","1509 Culver St"))
+                        .param("queryby", "addres")
+                        .param("option", "1509 Culver St"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 
     @Test
-    public void cantDeleteFireStationNotDigitsOnlyStation()throws Exception{
+    public void cantDeleteFireStationNotDigitsOnlyStation() throws Exception {
         listSearcher = new ListSearcher();
         JsonElts jsonElts = jsonReader.getJson();
-        List<FireStation> firestations = listSearcher.searchAFireStationByValue("station","1a",jsonElts.getFirestations());
-        assertEquals(firestations.size(),0);
+        List<FireStation> firestations = listSearcher.searchAFireStationByValue("station", "1a", jsonElts.getFirestations());
+        assertEquals(firestations.size(), 0);
         mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
-                        .param("queryby","station")
-                        .param("option","1a"))
+                        .param("queryby", "station")
+                        .param("option", "1a"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 
     @Test
-    public void InexistantFireStationToDelete()throws Exception{
+    public void InexistantFireStationToDelete() throws Exception {
         listSearcher = new ListSearcher();
         JsonElts jsonElts = jsonReader.getJson();
-        List<FireStation> fireStations = listSearcher.searchAFireStationByValue("address","rue des coquelicots",jsonElts.getFirestations());
-        assertEquals(fireStations.size(),0);
+        List<FireStation> fireStations = listSearcher.searchAFireStationByValue("address", "rue des coquelicots", jsonElts.getFirestations());
+        assertEquals(fireStations.size(), 0);
         mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
-                        .param("queryby","address")
-                        .param("option","rue des coquelicots"))
+                        .param("queryby", "address")
+                        .param("option", "rue des coquelicots"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
     }
@@ -172,7 +173,7 @@ public class FirestationsControllerTests {
     }
 
     @Test
-    public void testFloodAlert()throws Exception {
+    public void testFloodAlert() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/flood/stations")
                         .param("stations", "1,2,3")
@@ -182,8 +183,8 @@ public class FirestationsControllerTests {
     }
 
     @Test
-    public void testFloodAlertInexistantStation()throws Exception {
-        HashMap<String,List<HashMap>> addressDisplayer = new HashMap<>();
+    public void testFloodAlertInexistantStation() throws Exception {
+        HashMap<String, List<HashMap>> addressDisplayer = new HashMap<>();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/flood/stations")
                         .param("stations", "acf,7fd8,zae")
@@ -194,7 +195,7 @@ public class FirestationsControllerTests {
     }
 
     @Test
-    public void testFireAlert()throws Exception {
+    public void testFireAlert() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/fire")
                         .param("address", "1509 Culver St")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -203,7 +204,7 @@ public class FirestationsControllerTests {
     }
 
     @Test
-    public void testFireAlertInexistantAddress()throws Exception {
+    public void testFireAlertInexistantAddress() throws Exception {
         List<HashMap> returningData = new ArrayList<>();
 
         String json = "{\n" +

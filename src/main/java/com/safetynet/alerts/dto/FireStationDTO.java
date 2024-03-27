@@ -6,6 +6,7 @@ public class FireStationDTO {
     private final String lastName;
     private final String address;
     private final String phoneNumber;
+
     public String getFirstName() {
         return firstName;
     }
@@ -21,7 +22,6 @@ public class FireStationDTO {
     public String getPhoneNumber() {
         return phoneNumber;
     }
-
 
 
     public FireStationDTO(String firstName, String lastName, String address, String phoneNumber) {
